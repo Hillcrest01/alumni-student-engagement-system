@@ -24,6 +24,13 @@ class User(UserMixin, db.Model):
     profile_complete = db.Column(db.Boolean, default=False)
     interests = db.relationship('Interest', secondary=user_interest,
                                backref=db.backref('users', lazy=True))
+    full_name = db.Column(db.String(100))
+    bio = db.Column(db.Text)
+    linkedin_url = db.Column(db.String(200))
+    github_url = db.Column(db.String(200))
+    current_position = db.Column(db.String(100))  # For alumni
+    company = db.Column(db.String(100))           # For alumni
+    graduation_year = db.Column(db.Integer)       # For students
     
     def set_password(self, password):
         """Security-focused password hashing"""
