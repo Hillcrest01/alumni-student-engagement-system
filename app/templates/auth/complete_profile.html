@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+{% block title %}Complete Your Profile{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Complete Your Profile</h4>
+                </div>
+                <div class="card-body">
+                    <form method="POST">
+                        {{ form.hidden_tag() }}
+                        
+                        <div class="mb-3">
+                            {{ form.full_name.label(class="form-label") }}
+                            {{ form.full_name(class="form-control") }}
+                            {% for error in form.full_name.errors %}
+                                <div class="invalid-feedback d-block">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form.bio.label(class="form-label") }}
+                            {{ form.bio(class="form-control", rows="4") }}
+                            {% for error in form.bio.errors %}
+                                <div class="invalid-feedback d-block">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                {{ form.linkedin_url.label(class="form-label") }}
+                                {{ form.linkedin_url(class="form-control") }}
+                                {% for error in form.linkedin_url.errors %}
+                                    <div class="invalid-feedback d-block">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                {{ form.github_url.label(class="form-label") }}
+                                {{ form.github_url(class="form-control") }}
+                                {% for error in form.github_url.errors %}
+                                    <div class="invalid-feedback d-block">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        {% if current_user.role == 'alumni' %}
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                {{ form.current_position.label(class="form-label") }}
+                                {{ form.current_position(class="form-control") }}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                {{ form.company.label(class="form-label") }}
+                                {{ form.company(class="form-control") }}
+                            </div>
+                        </div>
+                        {% elif current_user.role == 'student' %}
+                        <div class="mb-3">
+                            {{ form.graduation_year.label(class="form-label") }}
+                            {{ form.graduation_year(class="form-control") }}
+                        </div>
+                        {% endif %}
+
+                        <div class="mb-3">
+                            <label class="form-label">Interests</label>
+                            <div class="row g-2">
+                                {% for interest in form.interests %}
+                                <div class="col-md-4 col-sm-6">
+                                    <div class="form-check">
+                                        <input class="form-check-input" 
+                                               type="checkbox" 
+                                               name="interests" 
+                                               value="{{ interest.data }}" 
+                                               id="interest-{{ interest.data }}"
+                                               {% if interest.data in form.interests.data %}checked{% endif %}>
+                                        <label class="form-check-label" for="interest-{{ interest.data }}">
+                                            {{ interest.label.text }}
+                                        </label>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            {% if form.interests.errors %}
+                            <div class="invalid-feedback d-block">
+                                {% for error in form.interests.errors %}
+                                {{ error }}
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                Save Profile
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

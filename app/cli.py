@@ -23,3 +23,10 @@ def register_commands(app):
         db.session.add(admin)
         db.session.commit()
         click.echo(f"Admin {email} created successfully!")
+
+    @app.cli.command("seed-interests")
+    def seed_interests():
+        """Add default interests to database"""
+        from app.models import Interest
+        Interest.seed_default_interests()
+        print("Default interests added to database!")
