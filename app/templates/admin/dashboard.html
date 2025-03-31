@@ -5,36 +5,40 @@
 <div class="container mt-4">
     <h2 class="mb-4">Admin Dashboard</h2>
     
-    <div class="card shadow">
-        <div class="card-header bg-primary text-white">
-            <h5 class="mb-0">User Management</h5>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card text-white bg-primary mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Total Users</h5>
+                    <p class="card-text display-4">{{ stats.total_users }}</p>
+                </div>
+            </div>
         </div>
-        <div class="card-body">
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>Email</th>
-                        <th>Role</th>
-                        <th>Last Login</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for user in users %}
-                    <tr>
-                        <td>{{ user.email }}</td>
-                        <td>{{ user.role }}</td>
-                        <td>
-                            {% if user.last_login %}
-                                {{ user.last_login.strftime('%Y-%m-%d %H:%M') }}
-                            {% else %}
-                                Never
-                            {% endif %}
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+        <div class="col-md-4">
+            <div class="card text-white bg-success mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Active Alumni</h5>
+                    <p class="card-text display-4">{{ stats.active_alumni }}</p>
+                </div>
+            </div>
         </div>
+        <div class="col-md-4">
+            <div class="card text-white bg-info mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Pending Verifications</h5>
+                    <p class="card-text display-4">{{ stats.pending_verifications }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="mt-4">
+        <a href="{{ url_for('admin.manage_users') }}" class="btn btn-primary me-2">
+            Manage Users
+        </a>
+        <a href="{{ url_for('admin.add_user') }}" class="btn btn-success">
+            Add New User
+        </a>
     </div>
 </div>
 {% endblock %}

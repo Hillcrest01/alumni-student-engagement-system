@@ -31,6 +31,8 @@ class User(UserMixin, db.Model):
     current_position = db.Column(db.String(100))  # For alumni
     company = db.Column(db.String(100))           # For alumni
     graduation_year = db.Column(db.Integer)       # For students
+    availability = db.Column(db.String(20), default='away')
+    last_active = db.Column(db.DateTime)
     
     def set_password(self, password):
         """Security-focused password hashing"""
@@ -54,6 +56,55 @@ class Interest(db.Model):
     
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), unique=True, nullable=False)
-    category = db.Column(db.String(20))  # Optional grouping
+    category = db.Column(db.String(20))
+
+    @classmethod
+    def seed_default_interests(cls):
+        default_interests = [
+            'Frontend Development',
+            'Backend Development',
+            'Mobile Development',
+            'Data Science',
+            'Machine Learning',
+            'Cybersecurity',
+            'Cloud Computing',
+            'DevOps',
+            'UI/UX Design',
+            'Project Management',
+            'Networking',
+            'Database Administration'
+        ]
+        
+        for interest_name in default_interests:
+            if not cls.query.filter_by(name=interest_name).first():
+                new_interest = cls(name=interest_name)
+                db.session.add(new_interest)
+        db.session.commit()
+
+    @property
+    def interest_ids(self):
+        return {i.id for i in self.interests}
+    
+    def get_unread_count(self):
+        return Message.query.filter_by(receiver_id=self.id, read=False).count()
+    
+
+
+
+class Message(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    content = db.Column(db.Text, nullable=False)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+    sender_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    receiver_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    read = db.Column(db.Boolean, default=False)
+
+    sender = db.relationship('User', foreign_keys=[sender_id], backref='sent_messages')
+    receiver = db.relationship('User', foreign_keys=[receiver_id], backref='received_messages')
+
+
+    @staticmethod
+    def get_unread_count(user_id):
+        return Message.query.filter_by(receiver_id=user_id, read=False).count()
 
 

@@ -41,10 +41,14 @@ def create_app(config_class=Config):
         from . import models
         from .auth import routes as auth_routes
         from .admin import routes as admin_routes
+        from .views import views_bp
+        from .messaging import routes as messaging_routes
         
         # Register blueprints
         app.register_blueprint(auth_routes.auth_bp)
         app.register_blueprint(admin_routes.admin_bp)
+        app.register_blueprint(views_bp)
+        app.register_blueprint(messaging_routes.messaging_bp)
     
     # Register CLI commands
     from .cli import register_commands

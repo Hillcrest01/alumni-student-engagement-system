@@ -1,8 +1,9 @@
-from flask import Blueprint, render_template, redirect, url_for, flash
+from flask import Blueprint, render_template, redirect, url_for, flash, request, abort
 from flask_login import login_user, logout_user, current_user, login_required
 from app.extensions import db
 from app.models import User, Interest
 from app.forms import LoginForm, ChangePasswordForm, CompleteProfileForm
+from datetime import datetime
 
 auth_bp = Blueprint('auth', __name__)
 
@@ -74,13 +75,22 @@ def profile():
 @auth_bp.route('/complete-profile', methods=['GET', 'POST'])
 @login_required
 def complete_profile():
-    if current_user.profile_complete:
-        return redirect(url_for('auth.profile'))
-    
     form = CompleteProfileForm()
     form.interests.choices = [(i.id, i.name) for i in Interest.query.all()]
     
+    # Pre-populate existing data
+    if request.method == 'GET':
+        form.full_name.data = current_user.full_name
+        form.bio.data = current_user.bio
+        form.linkedin_url.data = current_user.linkedin_url
+        form.github_url.data = current_user.github_url
+        form.current_position.data = current_user.current_position
+        form.company.data = current_user.company
+        form.graduation_year.data = current_user.graduation_year
+        form.interests.data = [i.id for i in current_user.interests]
+    
     if form.validate_on_submit():
+        # Update user logic
         current_user.full_name = form.full_name.data
         current_user.bio = form.bio.data
         current_user.linkedin_url = form.linkedin_url.data
@@ -92,9 +102,9 @@ def complete_profile():
         elif current_user.role == 'student':
             current_user.graduation_year = form.graduation_year.data
         
-        # Update interests
         current_user.interests = Interest.query.filter(
-            Interest.id.in_(form.interests.data)).all()
+            Interest.id.in_(form.interests.data)
+        ).all()
         
         current_user.profile_complete = True
         db.session.commit()
@@ -103,3 +113,21 @@ def complete_profile():
         return redirect(url_for('auth.profile'))
     
     return render_template('auth/complete_profile.html', form=form)
+
+@auth_bp.route('/update-availability', methods=['POST'])
+@login_required
+def update_availability():
+    if current_user.role != 'alumni':
+        abort(403)
+    
+    new_status = request.form.get('availability')
+    if new_status not in ['available', 'away']:
+        flash('Invalid availability status', 'danger')
+        return redirect(url_for('auth.profile'))
+    
+    current_user.availability = new_status
+    current_user.last_active = datetime.utcnow()
+    db.session.commit()
+    
+    flash('Availability status updated!', 'success')
+    return redirect(url_for('auth.profile'))

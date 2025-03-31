@@ -1,0 +1,18 @@
+/* Availability Indicator */
+.status-indicator {
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-weight: 500;
+    width: fit-content;
+    transition: all 0.3s ease;
+}
+
+.status-indicator.available {
+    background-color: #28a745;
+    color: white;
+}
+
+.status-indicator.away {
+    background-color: #6c757d;
+    color: white;
+}

@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, TextAreaField, IntegerField, SelectMultipleField
+from wtforms import StringField, PasswordField, SubmitField, TextAreaField, IntegerField, SelectMultipleField, SelectField, BooleanField
 from wtforms.validators import DataRequired, Email, Length, EqualTo, Optional, URL
 class LoginForm(FlaskForm):
     email = StringField('Email', validators=[
@@ -35,5 +35,25 @@ class CompleteProfileForm(FlaskForm):
     company = StringField('Company (Alumni only)', validators=[Optional()])
     graduation_year = IntegerField('Graduation Year (Students only)', 
                                   validators=[Optional()])
-    interests = SelectMultipleField('Interests', coerce=int)
+    interests = SelectMultipleField('Interests', coerce=int,  render_kw={"class": "d-none"})
     submit = SubmitField('Save Profile')
+
+class AdminAddUserForm(FlaskForm):
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    role = SelectField('Role', choices=[
+        ('student', 'Student'), 
+        ('alumni', 'Alumni'),
+        ('admin', 'Admin')
+    ], validators=[DataRequired()])
+    submit = SubmitField('Add User')
+
+class AdminEditUserForm(FlaskForm):
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    role = SelectField('Role', choices=[
+        ('student', 'Student'), 
+        ('alumni', 'Alumni'),
+        ('admin', 'Admin')
+    ], validators=[DataRequired()])
+    profile_complete = BooleanField('Profile Completed')
+    is_verified = BooleanField('Email Verified')
+    submit = SubmitField('Update User')
