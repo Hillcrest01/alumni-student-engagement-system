@@ -2,6 +2,7 @@ from flask import Blueprint, render_template, redirect, url_for, request, flash
 from flask_login import login_required, current_user
 from app import db
 from app.models import Message, User
+from app.utils import utc_to_eat
 
 messaging_bp = Blueprint('messaging', __name__)
 
@@ -36,12 +37,30 @@ def view_conversation(recipient_id):
         ((Message.sender_id == current_user.id) & (Message.receiver_id == recipient_id)) |
         ((Message.sender_id == recipient_id) & (Message.receiver_id == current_user.id))
     ).order_by(Message.timestamp.asc()).all()
-    Message.query.filter_by(receiver_id=current_user.id, sender_id=recipient_id).update({'read': True})
+    
+    # Convert messages to dictionary list with EAT timestamps
+    converted_messages = []
+    for msg in messages:
+        converted_messages.append({
+            "id": msg.id,
+            "content": msg.content,
+            "sender_id": msg.sender_id,
+            "receiver_id": msg.receiver_id,
+            "read": msg.read,
+            "eat_timestamp": utc_to_eat(msg.timestamp).strftime('%Y-%m-%d %H:%M')
+        })
+    
+    # Mark messages as read
+    Message.query.filter_by(
+        receiver_id=current_user.id, 
+        sender_id=recipient_id,
+        read=False
+    ).update({'read': True})
     db.session.commit()
     
     return render_template('messaging/conversation.html', 
                          recipient=recipient,
-                         messages=messages)
+                         messages=converted_messages)
 
 @messaging_bp.route('/inbox')
 @login_required
@@ -72,4 +91,10 @@ def inbox():
         User.id != current_user.id
     ).group_by(User.id).order_by(db.desc('last_message_time')).all()
 
-    return render_template('messaging/inbox.html', conversations=conversations)
+    converted_conversations = []
+    for user, last_time, unread in conversations:
+        eat_time = utc_to_eat(last_time).strftime('%Y-%m-%d %H:%M') if last_time else "No messages"
+        converted_conversations.append((user, eat_time, unread))
+    
+    return render_template('messaging/inbox.html', 
+                         conversations=converted_conversations)

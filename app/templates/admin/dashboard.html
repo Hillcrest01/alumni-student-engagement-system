@@ -6,7 +6,8 @@
     <h2 class="mb-4">Admin Dashboard</h2>
     
     <div class="row">
-        <div class="col-md-4">
+        <!-- Existing stats cards -->
+        <div class="col-md-3">
             <div class="card text-white bg-primary mb-3">
                 <div class="card-body">
                     <h5 class="card-title">Total Users</h5>
@@ -14,7 +15,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
             <div class="card text-white bg-success mb-3">
                 <div class="card-body">
                     <h5 class="card-title">Active Alumni</h5>
@@ -22,7 +23,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
             <div class="card text-white bg-info mb-3">
                 <div class="card-body">
                     <h5 class="card-title">Pending Verifications</h5>
@@ -30,15 +31,77 @@
                 </div>
             </div>
         </div>
+        <!-- New Pending Events Card -->
+        <div class="col-md-3">
+            <div class="card text-white bg-warning mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Pending Events</h5>
+                    <p class="card-text display-4">{{ stats.pending_events_count }}</p>
+                </div>
+            </div>
+        </div>
     </div>
     
-    <div class="mt-4">
+    <!-- Action Buttons -->
+    <div class="mt-4 mb-4">
         <a href="{{ url_for('admin.manage_users') }}" class="btn btn-primary me-2">
-            Manage Users
+            <i class="bi bi-people-fill"></i> Manage Users
         </a>
-        <a href="{{ url_for('admin.add_user') }}" class="btn btn-success">
-            Add New User
+        <a href="{{ url_for('admin.add_user') }}" class="btn btn-success me-2">
+            <i class="bi bi-person-plus"></i> Add User
         </a>
+        <a href="#pending-events" class="btn btn-warning">
+            <i class="bi bi-calendar-check"></i> Review Events
+        </a>
+    </div>
+
+    <!-- Pending Events Section -->
+    <div class="card shadow">
+        <div class="card-header bg-warning text-white">
+            <h4 class="mb-0"><i class="bi bi-hourglass-split"></i> Pending Event Approvals</h4>
+        </div>
+        <div class="card-body">
+            {% if pending_events %}
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Event Title</th>
+                            <th>Created By</th>
+                            <th>Event Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for event in pending_events %}
+                        <tr>
+                            <td>{{ event.title }}</td>
+                            <td>{{ event.creator.full_name }}</td>
+                            <td>{{ event.date_time }}</td>
+                            <td>
+                                <div class="d-flex gap-2">
+                                    <form action="{{ url_for('admin.approve_event', event_id=event.id) }}" method="POST">
+                                        <button type="submit" class="btn btn-sm btn-success">
+                                            <i class="bi bi-check-circle"></i> Approve
+                                        </button>
+                                    </form>
+                                    <a href="{{ url_for('events.event_detail', event_id=event.id) }}" 
+                                       class="btn btn-sm btn-primary">
+                                        <i class="bi bi-eye"></i> View
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="alert alert-info mb-0">
+                <i class="bi bi-check2-all"></i> No pending events needing approval!
+            </div>
+            {% endif %}
+        </div>
     </div>
 </div>
 {% endblock %}

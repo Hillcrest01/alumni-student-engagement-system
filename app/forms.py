@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, TextAreaField, IntegerField, SelectMultipleField, SelectField, BooleanField
+from wtforms import StringField, PasswordField, SubmitField, TextAreaField, IntegerField, SelectMultipleField, SelectField, BooleanField, DateTimeField
 from wtforms.validators import DataRequired, Email, Length, EqualTo, Optional, URL
 class LoginForm(FlaskForm):
     email = StringField('Email', validators=[
@@ -57,3 +57,17 @@ class AdminEditUserForm(FlaskForm):
     profile_complete = BooleanField('Profile Completed')
     is_verified = BooleanField('Email Verified')
     submit = SubmitField('Update User')
+
+
+from flask_wtf.file import FileField, FileAllowed
+
+class EventForm(FlaskForm):
+    title = StringField('Event Title', validators=[DataRequired()])
+    description = TextAreaField('Event Description', validators=[DataRequired()])
+    date_time = DateTimeField('Event Date & Time', format='%Y-%m-%d %H:%M',
+                            validators=[DataRequired()])
+    location = StringField('Location', validators=[DataRequired()])
+    image = FileField('Event Image', validators=[
+        FileAllowed(['jpg', 'png', 'jpeg'], 'Images only!')
+    ])
+    submit = SubmitField('Create Event')
