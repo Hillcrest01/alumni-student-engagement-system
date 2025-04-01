@@ -100,3 +100,36 @@ def delete_event(event_id):
     db.session.commit()
     flash('Event deleted successfully', 'success')
     return redirect(url_for('events.event_list'))
+
+
+@events_bp.route('/<int:event_id>/update', methods=['GET', 'POST'])
+@login_required
+def update_event(event_id):
+    event = Event.query.get_or_404(event_id)
+    if not (current_user.is_admin() or event.creator_id == current_user.id):
+        abort(403)
+    
+    form = EventForm(obj=event)
+    
+    if form.validate_on_submit():
+        # Handle image update
+        if form.remove_image.data:
+            event.image = None
+        elif form.image.data:
+            filename = secure_filename(form.image.data.filename)
+            filepath = os.path.join(current_app.config['UPLOAD_FOLDER'], 'events', filename)
+            form.image.data.save(filepath)
+            event.image = f"events/{filename}"
+        
+        event.title = form.title.data
+        event.description = form.description.data
+        event.date_time = form.date_time.data
+        event.location = form.location.data
+        
+        db.session.commit()
+        flash('Event updated successfully', 'success')
+        return redirect(url_for('events.event_detail', event_id=event.id))
+    
+    # Pre-populate form for GET request
+    form.date_time.data = event.date_time
+    return render_template('events/update.html', form=form, event=convert_event_for_display(event))

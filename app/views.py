@@ -1,6 +1,8 @@
 from flask import Blueprint, redirect, url_for, render_template, flash
 from flask_login import login_required, current_user
-from app.models import User, Interest
+from app.models import User, Interest, Event
+from datetime import datetime
+from app.utils import utc_to_eat
 
 views_bp = Blueprint('views', __name__)
 
