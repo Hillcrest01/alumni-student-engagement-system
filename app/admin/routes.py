@@ -1,10 +1,10 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, abort
 from flask_login import login_required, current_user
 from app import db
-from app.models import User, Interest
+from app.models import User, Interest, Event
 from app.forms import AdminAddUserForm, AdminEditUserForm
 from werkzeug.security import generate_password_hash
-import secrets
+from datetime import datetime
 
 admin_bp = Blueprint('admin', __name__, url_prefix='/admin')
 
@@ -16,17 +16,31 @@ def check_admin():
 
 @admin_bp.route('/dashboard')
 def dashboard():
-    from app.models import User
+    # Get dashboard statistics
     stats = {
         'total_users': User.query.count(),
         'active_alumni': User.query.filter(
             User.role == 'alumni',
             User.availability == 'available'
         ).count(),
-        'pending_verifications': User.query.filter_by(is_verified=False).count()
+        'pending_verifications': User.query.filter_by(is_verified=False).count(),
+        'pending_events_count': Event.query.filter_by(is_verified=False).count()
     }
     
-    return render_template('admin/dashboard.html' , stats = stats)
+    # Get pending events for approval
+    pending_events = []
+    for event in Event.query.filter_by(is_verified=False).order_by(Event.date_time.asc()).all():
+        pending_events.append({
+            'id': event.id,
+            'title': event.title,
+            'creator': event.creator,
+            'date_time': event.date_time.strftime('%Y-%m-%d'),  # Format here
+            'raw_date': event.date_time  # Keep original for sorting if needed
+        })
+    
+    return render_template('admin/dashboard.html', 
+                         stats=stats,
+                         pending_events=pending_events)
 
 @admin_bp.route('/users')
 def manage_users():
@@ -38,7 +52,7 @@ def add_user():
     form = AdminAddUserForm()
     
     if form.validate_on_submit():
-        temp_password = secrets.token_urlsafe(12)
+        temp_password = "Password123!"
         user = User(
             email=form.email.data,
             role=form.role.data,
@@ -82,3 +96,25 @@ def delete_user(user_id):
     db.session.commit()
     flash('User deleted successfully', 'success')
     return redirect(url_for('admin.manage_users'))
+
+@admin_bp.route('/verify-event/<int:event_id>', methods=['POST'])
+def verify_event(event_id):
+    event = Event.query.get_or_404(event_id)
+    event.is_verified = True
+    db.session.commit()
+    flash(f'Event "{event.title}" approved successfully', 'success')
+    return redirect(url_for('admin.dashboard'))
+
+@admin_bp.route('/delete-event/<int:event_id>', methods=['POST'])
+def delete_event(event_id):
+    event = Event.query.get_or_404(event_id)
+    db.session.delete(event)
+    db.session.commit()
+    flash('Event deleted successfully', 'success')
+    return redirect(url_for('admin.dashboard'))
+
+
+@admin_bp.route('/verify-events')
+def verify_events():
+    pending_events = Event.query.filter_by(is_verified=False).all()
+    return render_template('admin/verify_events.html', events=pending_events)

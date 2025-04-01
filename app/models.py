@@ -106,5 +106,19 @@ class Message(db.Model):
     @staticmethod
     def get_unread_count(user_id):
         return Message.query.filter_by(receiver_id=user_id, read=False).count()
+    
+
+class Event(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(150), nullable=False)
+    description = db.Column(db.Text, nullable=False)
+    date_time = db.Column(db.DateTime, nullable=False)
+    location = db.Column(db.String(200))
+    image = db.Column(db.String(255))  # Stores image path
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    is_verified = db.Column(db.Boolean, default=False)
+    creator_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    
+    creator = db.relationship('User', backref=db.backref('created_events', lazy=True))
 
 
