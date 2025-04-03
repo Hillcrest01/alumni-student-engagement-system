@@ -43,12 +43,14 @@ def create_app(config_class=Config):
         from .admin import routes as admin_routes
         from .views import views_bp
         from .messaging import routes as messaging_routes
+        from .events import routes as events_routes
         
         # Register blueprints
         app.register_blueprint(auth_routes.auth_bp)
         app.register_blueprint(admin_routes.admin_bp)
         app.register_blueprint(views_bp)
         app.register_blueprint(messaging_routes.messaging_bp)
+        app.register_blueprint(events_routes.events_bp, url_prefix='/events')
     
     # Register CLI commands
     from .cli import register_commands

@@ -1,15 +1,37 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, request, abort
 from flask_login import login_user, logout_user, current_user, login_required
 from app.extensions import db
-from app.models import User, Interest
+from app.models import User, Interest, Event
+from app.utils import utc_to_eat
 from app.forms import LoginForm, ChangePasswordForm, CompleteProfileForm
 from datetime import datetime
 
 auth_bp = Blueprint('auth', __name__)
 
 @auth_bp.route('/')
-def home():
-    return redirect(url_for('auth.login'))
+def index():
+    # Get first 5 upcoming verified events
+    now = datetime.utcnow()
+    upcoming_events = Event.query.filter(
+        Event.date_time > now,
+        Event.is_verified == True
+    ).order_by(Event.date_time.asc()).limit(5).all()
+
+    # Convert events for display
+    converted_events = []
+    for event in upcoming_events:
+        converted = {
+            'id': event.id,
+            'title': event.title,
+            'description': event.description,
+            'eat_datetime': utc_to_eat(event.date_time).strftime('%Y-%m-%d %H:%M'),
+            'location': event.location,
+            'image': event.image,
+            'creator_id': event.creator_id
+        }
+        converted_events.append(converted)
+
+    return render_template('index.html', upcoming_events=converted_events)
 
 @auth_bp.route('/login', methods=['GET', 'POST'])
 def login():

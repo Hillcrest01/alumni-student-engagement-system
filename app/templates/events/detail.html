@@ -1,0 +1,26 @@
+<!-- /templates/events/detail.html -->
+{% extends "base.html" %}
+
+{% block title %}{{ event.title }} - Event Details{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card shadow">
+        {% if event.image %}
+        <img src="{{ url_for('static', filename='uploads/' + event.image) }}" 
+             class="card-img-top" 
+             alt="{{ event.title }}" 
+             style="height: 300px; object-fit: cover; border-radius: 10px;">
+        {% endif %}
+        
+        <div class="card-body">
+            <h2 class="card-title">{{ event.title }}</h2>
+            <p class="text-muted"><strong>Date:</strong> {{ event.eat_datetime }}</p>
+            <p class="text-muted"><strong>Location:</strong> {{ event.location }}</p>
+            <p class="card-text">{{ event.description }}</p>
+            
+            <a href="{{ url_for('events.event_list') }}" class="btn btn-primary mt-3">Back to Events</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
