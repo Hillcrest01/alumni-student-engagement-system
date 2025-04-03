@@ -21,3 +21,6 @@ class Config:
     MAIL_USE_TLS = True
     MAIL_USERNAME = os.getenv('MAIL_USERNAME')
     MAIL_PASSWORD = os.getenv('MAIL_PASSWORD')
+
+    # UPLOAD_FOLDER = os.path.join(os.getcwd(), 'static', 'uploads' , 'events')
+    # os.makedirs(UPLOAD_FOLDER, exist_ok=True)  # Ensure the folder exists

@@ -22,17 +22,30 @@ def convert_event_for_display(event):
         'image': event.image,
         'is_verified': event.is_verified,
         'creator': event.creator,
-        'created_at': event.created_at
+        'created_at': event.created_at,
     }
+
+from flask import Blueprint, current_app, render_template, request, redirect, url_for, flash
+from flask_login import login_required, current_user
+import os
+from werkzeug.utils import secure_filename
+from app.models import db, Event
+from app.forms import EventForm
+
+events_bp = Blueprint('events', __name__)
 
 @events_bp.route('/create', methods=['GET', 'POST'])
 @login_required
 def create_event():
     form = EventForm()
+    
     if form.validate_on_submit():
+        upload_folder = current_app.config.get('UPLOAD_FOLDER', 'app/static/uploads/')  # Default to static/uploads
+        os.makedirs(os.path.join(upload_folder, 'events'), exist_ok=True)  # Ensure directory exists
+
         if form.image.data:
             filename = secure_filename(form.image.data.filename)
-            filepath = os.path.join(current_app.config['UPLOAD_FOLDER'], 'events', filename)
+            filepath = os.path.join(upload_folder, 'events', filename)
             form.image.data.save(filepath)
             image_url = f"events/{filename}"
         else:
@@ -55,6 +68,7 @@ def create_event():
         return redirect(url_for('events.event_list'))
     
     return render_template('events/create.html', form=form)
+
 
 @events_bp.route('/')
 def event_list():

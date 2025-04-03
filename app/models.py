@@ -49,6 +49,11 @@ class User(UserMixin, db.Model):
     def is_admin(self):
         """Check admin privileges"""
         return self.role == 'admin'
+    
+    def is_student(self):
+        """Check if the user is a student"""
+        return self.role == 'student'
+
 
 class Interest(db.Model):
     """Tag-like system for skills/specializations"""
