@@ -3,9 +3,9 @@
 
 {% block content %}
 <div class="container mt-4">
+    <!-- Upcoming Events Section -->
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2>Upcoming Events</h2>
-        {% if current_user.is_authenticated %}
         <div class="btn-group">
             <a href="{{ url_for('events.create_event') }}" class="btn btn-primary">
                 <i class="bi bi-plus-circle"></i> Create Event
@@ -14,7 +14,6 @@
                 View All Events
             </a>
         </div>
-        {% endif %}
     </div>
 
     {% if upcoming_events %}
@@ -39,8 +38,7 @@
                            class="btn btn-sm btn-outline-primary">
                             Details
                         </a>
-                        {% if current_user.is_authenticated and 
-                             (current_user.id == event.creator_id or current_user.is_admin()) %}
+                        {% if current_user.is_authenticated and current_user.id == event.creator_id %}
                         <a href="{{ url_for('events.update_event', event_id=event.id) }}" 
                            class="btn btn-sm btn-outline-secondary">
                             <i class="bi bi-pencil"></i> Edit
@@ -49,7 +47,7 @@
                     </div>
                 </div>
                 <div class="card-footer text-muted small">
-                    {{ event.location }}
+                    <i class="bi bi-geo-alt"></i> {{ event.location }}
                 </div>
             </div>
         </div>
@@ -60,5 +58,39 @@
         No upcoming events. Check back later!
     </div>
     {% endif %}
+
+
+    <!-- Latest Jobs Section -->
+    <div class="mt-5">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2>Latest Opportunities</h2>
+            <div class="btn-group">
+                <a href="{{ url_for('jobs.create_job') }}" class="btn btn-success">
+                    <i class="bi bi-plus-circle"></i> Post Job
+                </a>
+                <a href="{{ url_for('jobs.job_list') }}" class="btn btn-outline-success">
+                    View All Jobs
+                </a>
+            </div>
+        </div>
+
+<!-- Replace the entire "Latest Jobs Section" with this test -->
+<div class="mt-5">
+    <h2>Latest Opportunities (Test)</h2>
+    {% if latest_jobs %}
+        {% for job in latest_jobs %}
+            <div class="card mb-2">
+                <div class="card-body">
+                    <h5>{{ job.title }}</h5>
+                    <p>Company: {{ job.company }}</p>
+                    <p>ID: {{ job.id }}</p>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <div class="alert alert-danger">NO JOBS RENDERED</div>
+    {% endif %}
+</div>
+    </div>
 </div>
 {% endblock %}

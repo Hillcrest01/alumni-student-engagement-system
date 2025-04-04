@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, abort
 from flask_login import login_required, current_user
 from app import db
-from app.models import User, Interest, Event
+from app.models import User, Interest, Event, Job
 from app.forms import AdminAddUserForm, AdminEditUserForm
 from werkzeug.security import generate_password_hash
 from datetime import datetime
@@ -24,23 +24,44 @@ def dashboard():
             User.availability == 'available'
         ).count(),
         'pending_verifications': User.query.filter_by(is_verified=False).count(),
-        'pending_events_count': Event.query.filter_by(is_verified=False).count()
+        'pending_events_count': Event.query.filter_by(is_verified=False).count(),
+        'pending_jobs_count': Job.query.filter_by(is_verified=False).count()
     }
     
-    # Get pending events for approval
+    # Process pending events
     pending_events = []
     for event in Event.query.filter_by(is_verified=False).order_by(Event.date_time.asc()).all():
         pending_events.append({
             'id': event.id,
             'title': event.title,
             'creator': event.creator,
-            'date_time': event.date_time.strftime('%Y-%m-%d'),  # Format here
-            'raw_date': event.date_time  # Keep original for sorting if needed
+            'date_str': event.date_time.strftime('%Y-%m-%d'),
+            'type': 'event'
         })
     
-    return render_template('admin/dashboard.html', 
+    # Process pending jobs
+    pending_jobs = []
+    for job in Job.query.filter_by(is_verified=False).order_by(Job.created_at.asc()).all():
+        pending_jobs.append({
+            'id': job.id,
+            'title': job.title,
+            'creator': job.creator,
+            'date_str': job.created_at.strftime('%Y-%m-%d'),
+            'type': 'job'
+        })
+    
+    # Combine and sort all pending items
+    all_pending = sorted(
+        pending_events + pending_jobs,
+        key=lambda x: x['date_str'],
+        reverse=True
+    )
+    
+    return render_template('admin/dashboard.html',
                          stats=stats,
-                         pending_events=pending_events)
+                         pending_events=pending_events,
+                         pending_jobs=pending_jobs,
+                         all_pending=all_pending)
 
 @admin_bp.route('/users')
 def manage_users():
@@ -97,6 +118,8 @@ def delete_user(user_id):
     flash('User deleted successfully', 'success')
     return redirect(url_for('admin.manage_users'))
 
+
+
 @admin_bp.route('/verify-event/<int:event_id>', methods=['POST'])
 def verify_event(event_id):
     event = Event.query.get_or_404(event_id)
@@ -118,3 +141,26 @@ def delete_event(event_id):
 def verify_events():
     pending_events = Event.query.filter_by(is_verified=False).all()
     return render_template('admin/verify_events.html', events=pending_events)
+
+
+#jobs starts here
+@admin_bp.route('/approve-job/<int:job_id>', methods=['POST'])
+def approve_job(job_id):
+    job = Job.query.get_or_404(job_id)
+    job.is_verified = True
+    db.session.commit()
+    flash(f'Job "{job.title}" approved successfully', 'success')
+    return redirect(url_for('admin.dashboard'))
+
+@admin_bp.route('/delete-job/<int:job_id>', methods=['POST'])
+def delete_job(job_id):
+    job = Job.query.get_or_404(job_id)
+    db.session.delete(job)
+    db.session.commit()
+    flash('Job post deleted successfully', 'success')
+    return redirect(url_for('admin.dashboard'))
+
+@admin_bp.route('/pending-jobs')
+def list_jobs_pending():
+    pending_jobs = Job.query.filter_by(is_verified=False).all()
+    return render_template('admin/pending_jobs.html', jobs=pending_jobs)

@@ -71,3 +71,17 @@ class EventForm(FlaskForm):
         FileAllowed(['jpg', 'png', 'jpeg'], 'Images only!')
     ])
     submit = SubmitField('Create Event')
+
+
+class JobForm(FlaskForm):
+    title = StringField('Job Title', validators=[DataRequired()])
+    description = TextAreaField('Job Description', validators=[DataRequired()])
+    company = StringField('Company Name', validators=[DataRequired()])
+    job_type = SelectField('Type', choices=[('job', 'Full-time Job'), ('internship', 'Internship')], 
+                         validators=[DataRequired()])
+    location = StringField('Location', validators=[DataRequired()])
+    application_link = StringField('Application Link')
+    image = FileField('Company Logo', validators=[
+        FileAllowed(['jpg', 'png', 'jpeg'], 'Images only!')
+    ])
+    submit = SubmitField('Post Opportunity')

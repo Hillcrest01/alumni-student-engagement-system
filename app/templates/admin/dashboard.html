@@ -6,7 +6,7 @@
     <h2 class="mb-4">Admin Dashboard</h2>
     
     <div class="row">
-        <!-- Existing stats cards -->
+        <!-- Stats Cards -->
         <div class="col-md-3">
             <div class="card text-white bg-primary mb-3">
                 <div class="card-body">
@@ -31,7 +31,6 @@
                 </div>
             </div>
         </div>
-        <!-- New Pending Events Card -->
         <div class="col-md-3">
             <div class="card text-white bg-warning mb-3">
                 <div class="card-body">
@@ -40,23 +39,36 @@
                 </div>
             </div>
         </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-danger mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Pending Jobs</h5>
+                    <p class="card-text display-4">{{ stats.pending_jobs_count }}</p>
+                </div>
+            </div>
+        </div>
     </div>
-    
+
     <!-- Action Buttons -->
     <div class="mt-4 mb-4">
-        <a href="{{ url_for('admin.manage_users') }}" class="btn btn-primary me-2">
-            <i class="bi bi-people-fill"></i> Manage Users
-        </a>
-        <a href="{{ url_for('admin.add_user') }}" class="btn btn-success me-2">
-            <i class="bi bi-person-plus"></i> Add User
-        </a>
-        <a href="#pending-events" class="btn btn-warning">
-            <i class="bi bi-calendar-check"></i> Review Events
-        </a>
+        <div class="btn-group">
+            <a href="{{ url_for('admin.manage_users') }}" class="btn btn-primary">
+                <i class="bi bi-people-fill"></i> Manage Users
+            </a>
+            <a href="{{ url_for('admin.add_user') }}" class="btn btn-success">
+                <i class="bi bi-person-plus"></i> Add User
+            </a>
+            <a href="#pending-events" class="btn btn-warning">
+                <i class="bi bi-calendar-check"></i> Review Events
+            </a>
+            <a href="#pending-jobs" class="btn btn-danger">
+                <i class="bi bi-briefcase"></i> Review Jobs
+            </a>
+        </div>
     </div>
 
     <!-- Pending Events Section -->
-    <div class="card shadow">
+    <div class="card shadow mb-4" id="pending-events">
         <div class="card-header bg-warning text-white">
             <h4 class="mb-0"><i class="bi bi-hourglass-split"></i> Pending Event Approvals</h4>
         </div>
@@ -77,10 +89,10 @@
                         <tr>
                             <td>{{ event.title }}</td>
                             <td>{{ event.creator.full_name }}</td>
-                            <td>{{ event.date_time }}</td>
+                            <td>{{ event.date_str }}</td>
                             <td>
                                 <div class="d-flex gap-2">
-                                    <form action="{{ url_for('admin.verify_event', event_id=event.id) }}" method="POST">
+                                    <form action="{{ url_for('admin.approve_event', event_id=event.id) }}" method="POST">
                                         <button type="submit" class="btn btn-sm btn-success">
                                             <i class="bi bi-check-circle"></i> Approve
                                         </button>
@@ -89,6 +101,11 @@
                                        class="btn btn-sm btn-primary">
                                         <i class="bi bi-eye"></i> View
                                     </a>
+                                    <form action="{{ url_for('admin.delete_event', event_id=event.id) }}" method="POST">
+                                        <button type="submit" class="btn btn-sm btn-danger">
+                                            <i class="bi bi-trash"></i> Delete
+                                        </button>
+                                    </form>
                                 </div>
                             </td>
                         </tr>
@@ -99,6 +116,66 @@
             {% else %}
             <div class="alert alert-info mb-0">
                 <i class="bi bi-check2-all"></i> No pending events needing approval!
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Pending Jobs Section -->
+    <div class="card shadow" id="pending-jobs">
+        <div class="card-header bg-danger text-white">
+            <h4 class="mb-0"><i class="bi bi-hourglass-split"></i> Pending Job Approvals</h4>
+        </div>
+        <div class="card-body">
+            {% if pending_jobs %}
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Job Title</th>
+                            <th>Company</th>
+                            <th>Type</th>
+                            <th>Posted By</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for job in pending_jobs %}
+                        <tr>
+                            <td>{{ job.title }}</td>
+                            <td>{{ job.company }}</td>
+                            <td>
+                                <span class="badge bg-{{ 'info' if job.job_type == 'internship' else 'success' }}">
+                                    {{ job.job_type|capitalize }}
+                                </span>
+                            </td>
+                            <td>{{ job.creator.full_name }}</td>
+                            <td>
+                                <div class="d-flex gap-2">
+                                    <form action="{{ url_for('admin.approve_job', job_id=job.id) }}" method="POST">
+                                        <button type="submit" class="btn btn-sm btn-success">
+                                            <i class="bi bi-check-circle"></i> Approve
+                                        </button>
+                                    </form>
+                                    <a href="{{ url_for('jobs.job_detail', job_id=job.id) }}" 
+                                       class="btn btn-sm btn-primary">
+                                        <i class="bi bi-eye"></i> View
+                                    </a>
+                                    <form action="{{ url_for('admin.delete_job', job_id=job.id) }}" method="POST">
+                                        <button type="submit" class="btn btn-sm btn-danger">
+                                            <i class="bi bi-trash"></i> Delete
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="alert alert-info mb-0">
+                <i class="bi bi-check2-all"></i> No pending jobs needing approval!
             </div>
             {% endif %}
         </div>

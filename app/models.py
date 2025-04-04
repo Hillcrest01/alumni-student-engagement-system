@@ -127,3 +127,21 @@ class Event(db.Model):
     creator = db.relationship('User', backref=db.backref('created_events', lazy=True))
 
 
+
+
+class Job(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(150), nullable=False)
+    description = db.Column(db.Text, nullable=False)
+    company = db.Column(db.String(100), nullable=False)
+    job_type = db.Column(db.String(20), nullable=False)  # 'job' or 'internship'
+    location = db.Column(db.String(100))
+    application_link = db.Column(db.String(200))
+    image = db.Column(db.String(255))  # Stores image path
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    is_verified = db.Column(db.Boolean, default=False)
+    creator_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    
+    creator = db.relationship('User', backref=db.backref('posted_jobs', lazy=True))
+
+
