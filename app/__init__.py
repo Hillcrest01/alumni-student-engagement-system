@@ -44,6 +44,8 @@ def create_app(config_class=Config):
         from .views import views_bp
         from .messaging import routes as messaging_routes
         from .events import routes as events_routes
+        from .jobs import routes as jobs_routes
+        from .main import main_bp
         
         # Register blueprints
         app.register_blueprint(auth_routes.auth_bp)
@@ -51,6 +53,8 @@ def create_app(config_class=Config):
         app.register_blueprint(views_bp)
         app.register_blueprint(messaging_routes.messaging_bp)
         app.register_blueprint(events_routes.events_bp, url_prefix='/events')
+        app.register_blueprint(jobs_routes.jobs_bp, url_prefix='/jobs')
+        app.register_blueprint(main_bp, url_prefix='/')
     
     # Register CLI commands
     from .cli import register_commands
