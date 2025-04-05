@@ -33,27 +33,28 @@ def convert_job_for_display(job):
         'created_at': job.created_at.strftime('%Y-%m-%d'),
         'is_verified': job.is_verified,
         'creator_id': job.creator_id,
-        'creator': job.creator
+        'creator': job.creator.username
         
     }
 
-@main_bp.route('/')
+@main_bp.route('/' , methods = ['GET' , 'POST'])
 def index():
     now = datetime.utcnow()
-    
-    # Get events
+    # Get jobs
+    latest_jobs = Job.query.all()
+    print(f"Total jobs fetched: {len(latest_jobs)}") 
+
+        # Get events
     upcoming_events = Event.query.filter(
         Event.date_time > now,
         Event.is_verified == True
     ).order_by(Event.date_time.asc()).limit(3).all()
-    # Get jobs
-    latest_jobs = Job.query.filter_by(is_verified=True).order_by(Job.created_at.desc()).limit(4).all()
-
     # Convert models for display
     converted_upcoming = [convert_event_for_display(e) for e in upcoming_events]
-    converted_jobs = [convert_job_for_display(j) for j in latest_jobs]
+    converted_jobs = [convert_job_for_display(job) for job in latest_jobs]
 
     return render_template('index.html',
                          upcoming_events=converted_upcoming,
                          latest_jobs=converted_jobs,
                          current_time=now)
+

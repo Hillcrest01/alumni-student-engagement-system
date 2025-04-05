@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% block title %}Update Job{% endblock %}
+
+{% block content %}
+<section class="py-4">
+    <div class="container">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header" style="background-color: #161F37; color: white;">
+                <h4 class="mb-0"><i class="bi bi-briefcase me-2"></i> Update Job: {{ job.title }}</h4>
+            </div>
+            <div class="card-body p-4">
+                <form method="POST" enctype="multipart/form-data">
+                    {{ form.hidden_tag() }}
+
+                    <!-- Job Title -->
+                    <div class="mb-3">
+                        {{ form.title.label(class="form-label", style="color: #161F37;") }}
+                        {{ form.title(class="form-control") }}
+                        {% for error in form.title.errors %}
+                            <div class="text-danger small">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Company -->
+                    <div class="mb-3">
+                        {{ form.company.label(class="form-label", style="color: #161F37;") }}
+                        {{ form.company(class="form-control") }}
+                        {% for error in form.company.errors %}
+                            <div class="text-danger small">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Description -->
+                    <div class="mb-3">
+                        {{ form.description.label(class="form-label", style="color: #161F37;") }}
+                        {{ form.description(class="form-control", rows=4) }}
+                        {% for error in form.description.errors %}
+                            <div class="text-danger small">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="row mb-3">
+                        <!-- Job Type -->
+                        <div class="col-md-6 mb-3">
+                            {{ form.job_type.label(class="form-label", style="color: #161F37;") }}
+                            {{ form.job_type(class="form-select") }}
+                            {% for error in form.job_type.errors %}
+                                <div class="text-danger small">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <!-- Location -->
+                        <div class="col-md-6 mb-3">
+                            {{ form.location.label(class="form-label", style="color: #161F37;") }}
+                            {{ form.location(class="form-control") }}
+                            {% for error in form.location.errors %}
+                                <div class="text-danger small">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <!-- Application Link -->
+                    <div class="mb-3">
+                        {{ form.application_link.label(class="form-label", style="color: #161F37;") }}
+                        {{ form.application_link(class="form-control") }}
+                        {% for error in form.application_link.errors %}
+                            <div class="text-danger small">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Image Upload -->
+                    <div class="mb-3">
+                        {{ form.image.label(class="form-label", style="color: #161F37;") }}
+                        {{ form.image(class="form-control") }}
+                        {% if job.image %}
+                            <small class="form-text text-muted">Current Image: {{ job.image }}</small>
+                        {% endif %}
+                        {% for error in form.image.errors %}
+                            <div class="text-danger small">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="d-grid">
+                        <button type="submit" class="btn" style="background-color: #161F37; color: white;">
+                            <i class="bi bi-save me-2"></i> Update Job
+                        </button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

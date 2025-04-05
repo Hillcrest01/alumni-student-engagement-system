@@ -84,4 +84,15 @@ class JobForm(FlaskForm):
     image = FileField('Company Logo', validators=[
         FileAllowed(['jpg', 'png', 'jpeg'], 'Images only!')
     ])
+    remove_image = BooleanField('Remove Image')
     submit = SubmitField('Post Opportunity')
+
+
+
+class ContactForm(FlaskForm):
+    name = StringField('Your Name', validators=[DataRequired()])
+    email = StringField('Email Address', validators=[DataRequired(), Email()])
+    message = TextAreaField('Your Message', validators=[DataRequired()])
+
+class ContactFormLoggedIn(FlaskForm):
+    message = TextAreaField('Your Message', validators=[DataRequired()])

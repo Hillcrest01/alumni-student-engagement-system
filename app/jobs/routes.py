@@ -89,27 +89,35 @@ def delete_job(job_id):
 @login_required
 def update_job(job_id):
     job = Job.query.get_or_404(job_id)
+    
+    # Check permissions: only admin or creator can update
     if not (current_user.is_admin() or job.creator_id == current_user.id):
         abort(403)
-    
+
     form = JobForm(obj=job)
-    
+
     if form.validate_on_submit():
-        if form.image.data:
+        # Handle image update
+        if form.remove_image.data:
+            job.image = None
+        elif form.image.data and hasattr(form.image.data, 'filename'):
             filename = secure_filename(form.image.data.filename)
             filepath = os.path.join(current_app.config['UPLOAD_FOLDER'], 'jobs', filename)
             form.image.data.save(filepath)
             job.image = f"jobs/{filename}"
-        
+
+        # Update other job fields
         job.title = form.title.data
-        job.description = form.description.data
         job.company = form.company.data
+        job.description = form.description.data
         job.job_type = form.job_type.data
         job.location = form.location.data
         job.application_link = form.application_link.data
-        
+
+        # Commit changes to the database
         db.session.commit()
         flash('Job updated successfully', 'success')
         return redirect(url_for('jobs.job_detail', job_id=job.id))
-    
-    return render_template('jobs/update.html', form=form, job=convert_job_for_display(job))
+
+    # Pre-populate form for GET request
+    return render_template('jobs/update.html', form=form, job=job)

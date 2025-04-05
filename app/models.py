@@ -145,3 +145,19 @@ class Job(db.Model):
     creator = db.relationship('User', backref=db.backref('posted_jobs', lazy=True))
 
 
+class ContactMessage(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=True)  # Optional for logged-in users
+    email = db.Column(db.String(120), nullable=False)
+    message = db.Column(db.Text, nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    is_read = db.Column(db.Boolean, default=False)
+    is_responded = db.Column(db.Boolean, default=False)
+    response = db.Column(db.Text, nullable=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
+    
+    # Relationship
+    user = db.relationship('User', backref='contact_messages')
+
+    def __repr__(self):
+        return f'<ContactMessage {self.id} from {self.email}>'

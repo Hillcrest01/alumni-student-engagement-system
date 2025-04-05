@@ -2,95 +2,383 @@
 {% block title %}Home - Alumni Connect{% endblock %}
 
 {% block content %}
-<div class="container mt-4">
-    <!-- Upcoming Events Section -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2>Upcoming Events</h2>
-        <div class="btn-group">
-            <a href="{{ url_for('events.create_event') }}" class="btn btn-primary">
-                <i class="bi bi-plus-circle"></i> Create Event
+<!-- Hero Section -->
+<section class="py-4">
+    <div class="container">
+        <div class="row align-items-center g-4">
+            <div class="col-lg-6">
+                <h1 class="fw-bold text-dark mb-4" style="font-size: 2.5rem">
+                    We are Proud<br>
+                    <span class="text-success">Students of Egerton University</span>
+                </h1>
+                <p class="lead mb-4" style="font-size: 1.1rem">
+                    Your gateway to connect with alumni, faculty and fellow students. Here, you'll find 
+                    an opportunity for mentorship, career guidance, internships and network -all designed 
+                    to help shape your academic and professional journey.
+                </p>
+                <div class="d-flex gap-3">
+                    <a href="{{ url_for('jobs.job_list') }}" class="btn btn-success px-4 py-2">
+                        Jobs/Internships
+                    </a>
+                    <a href="{{ url_for('views.view_matches') }}" class="btn btn-outline-success px-4 py-2">
+                        Alumni Connect
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <img src="{{ url_for('static', filename='index/homepage.jpg') }}" 
+                     alt="Hero" 
+                     class="img-fluid rounded shadow">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Responsibility Section -->
+<section class="py-4 bg-light">
+    <div class="container">
+        <h2 class="text-center mb-4 fw-bold" style="font-size: 2rem">Our Responsibility</h2>
+        <div class="row g-3">
+            <!-- Scholarship Card -->
+            <div class="col-md-6 col-lg-3">
+                <div class="card h-100 border-0 shadow-sm">
+                    <img src="{{ url_for('static', filename='index/responsibility_01.avif') }}" 
+                         class="card-img-top rounded-circle mx-auto mt-3" 
+                         style="width: 100px; height: 100px; object-fit: cover;" 
+                         alt="Scholarship">
+                    <div class="card-body text-center">
+                        <h3 class="card-title mt-2 h5">Scholarship</h3>
+                        <p class="card-text px-2 small">
+                            Empowering students through scholarships to support academic excellence
+                            and reduce financial barriers. Discover numerous funding opportunities
+                            tailored for our vibrant community.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Mentorship Card -->
+            <div class="col-md-6 col-lg-3">
+                <div class="card h-100 border-0 shadow-sm">
+                    <img src="{{ url_for('static', filename='index/responsibility_02.webp') }}" 
+                         class="card-img-top rounded-circle mx-auto mt-3" 
+                         style="width: 100px; height: 100px; object-fit: cover;" 
+                         alt="Mentorship">
+                    <div class="card-body text-center">
+                        <h3 class="card-title mt-2 h5">Mentorship</h3>
+                        <p class="card-text px-2 small">
+                            Connect with experienced alumni and professionals ready to guide you
+                            through career development, personal growth, and academic success.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Community Card -->
+            <div class="col-md-6 col-lg-3">
+                <div class="card h-100 border-0 shadow-sm">
+                    <img src="{{ url_for('static', filename='index/responsibility_03.avif') }}" 
+                         class="card-img-top rounded-circle mx-auto mt-3" 
+                         style="width: 100px; height: 100px; object-fit: cover;" 
+                         alt="Community">
+                    <div class="card-body text-center">
+                        <h3 class="card-title mt-2 h5">Build Our Community</h3>
+                        <p class="card-text px-2 small">
+                            Create meaningful connections by engaging with peers, alumni, and
+                            partners to nurture a strong, inclusive community that thrives together.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Department Card -->
+            <div class="col-md-6 col-lg-3">
+                <div class="card h-100 border-0 shadow-sm">
+                    <img src="{{ url_for('static', filename='index/responsibility_04.webp') }}" 
+                         class="card-img-top rounded-circle mx-auto mt-3" 
+                         style="width: 100px; height: 100px; object-fit: cover;" 
+                         alt="Department">
+                    <div class="card-body text-center">
+                        <h3 class="card-title mt-2 h5">Supporting the Department</h3>
+                        <p class="card-text px-2 small">
+                            Join hands to strengthen our department by contributing ideas,
+                            resources, and expertise to foster innovation and excellence.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Mission Section -->
+<section class="py-4">
+    <div class="container">
+        <h2 class="text-center mb-4 fw-bold" style="font-size: 2rem">Our Mission</h2>
+        <div class="row g-4 align-items-center">
+            <div class="col-lg-6">
+                <img src="{{ url_for('static', filename='index/comp lab.jpg') }}" 
+                     alt="Mission" 
+                     class="img-fluid rounded shadow">
+            </div>
+            <div class="col-lg-6">
+                <p class="mb-4" style="font-size: 1rem">
+                    Our mission is to establish a dynamic and inclusive platform that bridges
+                    the gap between students, alumni, and faculty within our community. We aim
+                    to inspire and empower through mentorship, create opportunities for growth
+                    and development, and provide access to resources such as scholarships, job
+                    placements, and learning materials. By fostering collaboration and
+                    engagement, we strive to build a supportive environment where knowledge is
+                    shared, careers are shaped, and the future of our community is
+                    strengthened.
+                </p>
+                <a href="#" class="btn btn-success px-4">
+                    More About Us
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Stats Section -->
+<section class="py-4 bg-dark text-white">
+    <div class="container">
+        <div class="row g-3 text-center">
+            <div class="col-6 col-md-3">
+                <div class="d-flex align-items-center justify-content-center gap-2">
+                    <img src="{{ url_for('static', filename='index/man.png') }}" 
+                         alt="Members" 
+                         style="width: 40px;">
+                    <div>
+                        <h3 class="mb-0 fw-bold">{{ members }}+</h3>
+                        <small>Members</small>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-6 col-md-3">
+                <div class="d-flex align-items-center justify-content-center gap-2">
+                    <img src="{{ url_for('static', filename='index/scholarship.png') }}" 
+                         alt="Scholarships" 
+                         style="width: 40px;">
+                    <div>
+                        <h3 class="mb-0 fw-bold">{{ scholarships }}+</h3>
+                        <small>Scholarships</small>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-6 col-md-3">
+                <div class="d-flex align-items-center justify-content-center gap-2">
+                    <img src="{{ url_for('static', filename='index/event-list.png') }}" 
+                         alt="Events" 
+                         style="width: 40px;">
+                    <div>
+                        <h3 class="mb-0 fw-bold">{{ events_count }}+</h3>
+                        <small>Events</small>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-6 col-md-3">
+                <div class="d-flex align-items-center justify-content-center gap-2">
+                    <img src="{{ url_for('static', filename='index/award.png') }}" 
+                         alt="Jobs" 
+                         style="width: 40px;">
+                    <div>
+                        <h3 class="mb-0 fw-bold">{{ jobs_count }}+</h3>
+                        <small>Jobs</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Recent Jobs Section -->
+<section class="py-4 bg-light">
+    <div class="container">
+        <h2 class="text-center mb-4 fw-bold" style="font-size: 2rem">Recent Opportunities</h2>
+        
+        {% if latest_jobs %}
+        <div class="row g-3">
+            {% for job in latest_jobs[:4] %}
+            <div class="col-md-6 col-lg-3">
+                <div class="card h-100 shadow-sm">
+                    {% if job.image %}
+                    <img src="{{ url_for('static', filename='uploads/' + job.image) }}" 
+                         class="card-img-top" 
+                         alt="{{ job.title }}"
+                         style="height: 180px; object-fit: cover;">
+                    {% else %}
+                    <div class="card-img-top bg-secondary d-flex align-items-center justify-content-center" 
+                         style="height: 180px;">
+                        <i class="bi bi-briefcase text-white" style="font-size: 3rem;"></i>
+                    </div>
+                    {% endif %}
+                    <div class="card-body">
+                        <h3 class="card-title h6">{{ job.title }}</h3>
+                        <h6 class="card-subtitle mb-2 text-muted small">{{ job.company }}</h6>
+                        <div class="badge bg-success mb-2">{{ job.job_type }}</div>
+                        <p class="card-text small">{{ job.description|truncate(80) }}</p>
+                        <div class="d-flex align-items-center gap-1 small text-muted">
+                            <i class="bi bi-geo-alt"></i>
+                            <span>{{ job.location }}</span>
+                        </div>
+                        <div class="d-flex align-items-center gap-1 small text-muted mt-1">
+                            <i class="bi bi-clock"></i>
+                            <span>Posted {{ job.created_at }}</span>
+                        </div>
+                    </div>
+                    <div class="card-footer bg-transparent py-2">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <a href="{{ job.application_link }}" 
+                               class="btn btn-success btn-sm" 
+                               target="_blank">
+                                Apply Now
+                            </a>
+                            {% if current_user.is_authenticated and current_user.id == job.creator_id %}
+                            <a href="{{ url_for('jobs.update_job', job_id=job.id) }}" 
+                               class="btn btn-outline-secondary btn-sm">
+                                Edit
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        {% else %}
+        <div class="alert alert-info text-center">
+            No job opportunities available at the moment. Check back later!
+        </div>
+        {% endif %}
+        <div class="text-center mt-4">
+            <a href="{{ url_for('jobs.job_list') }}" class="btn btn-outline-success">
+                View All Opportunities
             </a>
-            <a href="{{ url_for('events.event_list') }}" class="btn btn-outline-primary">
+        </div>
+    </div>
+</section>
+
+<!-- Upcoming Events Section -->
+<section class="py-4">
+    <div class="container">
+        <h2 class="text-center mb-4 fw-bold" style="font-size: 2rem">Upcoming Events</h2>
+        
+        {% if upcoming_events %}
+        <div class="row g-3">
+            {% for event in upcoming_events[:3] %}
+            <div class="col-md-4">
+                <div class="card h-100 shadow-sm">
+                    {% if event.image %}
+                    <img src="{{ url_for('static', filename='uploads/' + event.image) }}" 
+                         class="card-img-top" 
+                         alt="{{ event.title }}"
+                         style="height: 180px; object-fit: cover;">
+                    {% else %}
+                    <div class="card-img-top bg-secondary d-flex align-items-center justify-content-center" 
+                         style="height: 180px;">
+                        <i class="bi bi-calendar-event text-white" style="font-size: 3rem;"></i>
+                    </div>
+                    {% endif %}
+                    <div class="card-body">
+                        <h3 class="card-title h6">{{ event.title }}</h3>
+                        <div class="badge bg-primary mb-2">
+                            {{ event.eat_datetime }}
+                        </div>
+                        <p class="card-text small">{{ event.description|truncate(80) }}</p>
+                        <div class="d-flex align-items-center gap-1 small text-muted">
+                            <i class="bi bi-geo-alt"></i>
+                            <span>{{ event.location }}</span>
+                        </div>
+                        {% if event.creator %}
+                        <div class="d-flex align-items-center gap-1 small text-muted mt-1">
+                            <i class="bi bi-person"></i>
+                            <span>Posted by {{ event.creator.username }}</span>
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="card-footer bg-transparent py-2">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <a href="{{ url_for('events.event_detail', event_id=event.id) }}" 
+                               class="btn btn-success btn-sm">
+                                View Details
+                            </a>
+                            {% if current_user.is_authenticated and current_user.id == event.creator_id %}
+                            <a href="{{ url_for('events.update_event', event_id=event.id) }}" 
+                               class="btn btn-outline-secondary btn-sm">
+                                Edit
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="text-center mt-4">
+            <a href="{{ url_for('events.event_list') }}" class="btn btn-outline-success">
                 View All Events
             </a>
         </div>
+        {% else %}
+        <div class="alert alert-info text-center">
+            No upcoming events scheduled. Check back later!
+        </div>
+        {% endif %}
     </div>
+</section>
 
-    {% if upcoming_events %}
-    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-        {% for event in upcoming_events %}
-        <div class="col">
-            <div class="card h-100 shadow">
-                {% if event.image %}
-                <img src="{{ url_for('static', filename='uploads/' + event.image) }}" 
-                     class="card-img-top" 
-                     alt="{{ event.title }}"
+<!-- Newsletter Section -->
+<section class="py-4 text-white" style="background-color: #CCCFD1; ">
+    <div class="container">
+        <div class="text-center" style="color: #212121;">
+            <h3 class="mb-3">Stay Updated With Alumni News</h3>
+            <p class="mb-4">Join Our Newsletter Today to keep on receiving the updates</p>
+            <div class="row justify-content-center">
+                <div class="col-md-8 col-lg-6">
+                    <form class="input-group">
+                        <input type="email" 
+                               class="form-control" 
+                               placeholder="Enter your email address"
+                               required>
+                               <button class="btn btn-light" type="submit" style="background-color: #161F37; color: white;">
+                                Subscribe
+                            </button>
+                            
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Mini Gallery -->
+<section class="py-4 bg-light">
+    <div class="container">
+        <div class="row g-3">
+            <div class="col-md-4">
+                <img src="{{ url_for('static', filename='index/homepage.jpg') }}" 
+                     class="img-fluid rounded shadow-sm" 
+                     alt="Campus View"
                      style="height: 200px; object-fit: cover;">
-                {% endif %}
-                <div class="card-body">
-                    <h5 class="card-title">{{ event.title }}</h5>
-                    <div class="badge bg-primary mb-2">
-                        {{ event.eat_datetime }}
-                    </div>
-                    <p class="card-text">{{ event.description|truncate(100) }}</p>
-                    <div class="d-flex justify-content-between align-items-center">
-                        <a href="{{ url_for('events.event_detail', event_id=event.id) }}" 
-                           class="btn btn-sm btn-outline-primary">
-                            Details
-                        </a>
-                        {% if current_user.is_authenticated and current_user.id == event.creator_id %}
-                        <a href="{{ url_for('events.update_event', event_id=event.id) }}" 
-                           class="btn btn-sm btn-outline-secondary">
-                            <i class="bi bi-pencil"></i> Edit
-                        </a>
-                        {% endif %}
-                    </div>
-                </div>
-                <div class="card-footer text-muted small">
-                    <i class="bi bi-geo-alt"></i> {{ event.location }}
-                </div>
+            </div>
+            <div class="col-md-4">
+                <img src="{{ url_for('static', filename='index/comp lab.jpg') }}" 
+                     class="img-fluid rounded shadow-sm" 
+                     alt="Computer Lab"
+                     style="height: 200px; object-fit: cover;">
+            </div>
+            <div class="col-md-4">
+                <img src="{{ url_for('static', filename='index/upcoming_event.jpg') }}" 
+                     class="img-fluid rounded shadow-sm" 
+                     alt="University Event"
+                     style="height: 200px; object-fit: cover;">
             </div>
         </div>
-        {% endfor %}
     </div>
-    {% else %}
-    <div class="alert alert-info">
-        No upcoming events. Check back later!
-    </div>
-    {% endif %}
-
-
-    <!-- Latest Jobs Section -->
-    <div class="mt-5">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2>Latest Opportunities</h2>
-            <div class="btn-group">
-                <a href="{{ url_for('jobs.create_job') }}" class="btn btn-success">
-                    <i class="bi bi-plus-circle"></i> Post Job
-                </a>
-                <a href="{{ url_for('jobs.job_list') }}" class="btn btn-outline-success">
-                    View All Jobs
-                </a>
-            </div>
-        </div>
-
-<!-- Replace the entire "Latest Jobs Section" with this test -->
-<div class="mt-5">
-    <h2>Latest Opportunities (Test)</h2>
-    {% if latest_jobs %}
-        {% for job in latest_jobs %}
-            <div class="card mb-2">
-                <div class="card-body">
-                    <h5>{{ job.title }}</h5>
-                    <p>Company: {{ job.company }}</p>
-                    <p>ID: {{ job.id }}</p>
-                </div>
-            </div>
-        {% endfor %}
-    {% else %}
-        <div class="alert alert-danger">NO JOBS RENDERED</div>
-    {% endif %}
-</div>
-    </div>
-</div>
+</section>
 {% endblock %}

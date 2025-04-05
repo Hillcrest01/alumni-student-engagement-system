@@ -2,49 +2,76 @@
 {% block title %}Job Opportunities{% endblock %}
 
 {% block content %}
-<div class="container mt-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2>Current Opportunities</h2>
-        {% if current_user.is_authenticated %}
-        <a href="{{ url_for('jobs.create_job') }}" class="btn btn-primary">
-            <i class="bi bi-plus-circle"></i> Post New Job
-        </a>
-        {% endif %}
-    </div>
+<section class="py-4">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="fw-bold" style="color: #161F37;">Current Opportunities</h2>
+            {% if current_user.is_authenticated %}
+            <a href="{{ url_for('jobs.create_job') }}" class="btn px-4 py-2" style="background-color: #161F37; color: white;">
+                <i class="bi bi-plus-circle me-2"></i> Post New Job
+            </a>
+            {% endif %}
+        </div>
 
-    <div class="row row-cols-1 row-cols-md-2 g-4">
-        {% for job in jobs %}
-        <div class="col">
-            <div class="card h-100 shadow">
-                {% if job.image %}
-                <img src="{{ url_for('static', filename='uploads/' + job.image) }}" 
-                     class="card-img-top" 
-                     alt="{{ job.company }} logo"
-                     style="height: 180px; object-fit: contain; padding: 1rem;">
-                {% endif %}
-                <div class="card-body">
-                    <h5 class="card-title">{{ job.title }}</h5>
-                    <div class="badge bg-{{ 'info' if job.job_type == 'internship' else 'success' }}">
-                        {{ 'Internship' if job.job_type == 'internship' else 'Full-time' }}
+        {% if latest_jobs %}
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            {% for job in latest_jobs %}
+            <div class="col">
+                <div class="card h-100 border-0 shadow-sm">
+                    {% if job.image %}
+                    <div class="text-center p-3" style="background-color: #ECF1F5; height: 180px;">
+                        <img src="{{ url_for('static', filename='uploads/' + job.image) }}" 
+                             class="img-fluid h-100" 
+                             alt="{{ job.title }}"
+                             style="object-fit: contain;">
                     </div>
-                    <p class="card-text mt-2">
-                        <i class="bi bi-building"></i> {{ job.company }}<br>
-                        <i class="bi bi-geo-alt"></i> {{ job.location }}
-                    </p>
-                    <a href="{{ url_for('jobs.job_detail', job_id=job.id) }}" class="btn btn-outline-primary">
-                        View Details
-                    </a>
-                </div>
-                <div class="card-footer bg-transparent">
-                    <small class="text-muted">Posted {{ job.created_at }}</small>
+                    {% else %}
+                    <div class="text-center p-3" style="background-color: #ECF1F5; height: 180px;">
+                        <i class="bi bi-briefcase h-100" style="font-size: 3rem; color: #161F37;"></i>
+                    </div>
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title" style="color: #161F37;">{{ job.title }}</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">{{ job.company }}</h6>
+                        <div class="badge rounded-pill px-3 py-2 mb-2" 
+                             style="background-color: {% if job.job_type == 'internship' %}#FFD700{% else %}#161F37{% endif %}; 
+                                    color: {% if job.job_type == 'internship' %}#161F37{% else %}white{% endif %};">
+                            {{ "Internship" if job.job_type == "internship" else "Full-time" }}
+                        </div>
+                        <p class="small mb-2">
+                            <i class="bi bi-geo-alt-fill me-1" style="color: #FFD700;"></i>
+                            {{ job.location }}
+                        </p>
+                        <p class="small text-muted">
+                            <i class="bi bi-calendar-fill me-1" style="color: #FFD700;"></i>
+                            Posted {{ job.created_at }}
+                        </p>
+                    </div>
+                    <div class="card-footer bg-transparent border-0">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <a href="{{ url_for('jobs.job_detail', job_id=job.id) }}" 
+                               class="btn btn-sm btn-outline-primary">
+                                View Details
+                            </a>
+                            {% if job.application_link %}
+                            <a href="{{ job.application_link }}" 
+                               class="btn btn-sm px-3" 
+                               style="background-color: #161F37; color: white;"
+                               target="_blank">
+                                Apply Now
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
                 </div>
             </div>
+            {% endfor %}
         </div>
         {% else %}
-        <div class="col">
-            <div class="alert alert-info">No job opportunities available at the moment</div>
+        <div class="alert alert-info">
+            <i class="bi bi-info-circle me-2"></i> No job opportunities available. Check back later!
         </div>
-        {% endfor %}
+        {% endif %}
     </div>
-</div>
+</section>
 {% endblock %}
