@@ -58,7 +58,7 @@ def login():
         if not user.password_changed:
             return redirect(url_for('auth.change_password'))
         
-        return redirect(url_for('auth.profile'))
+        return redirect(url_for('main.index'))
     
     return render_template('auth/login.html', form=form)
 
@@ -66,7 +66,7 @@ def login():
 def logout():
     logout_user()
     flash('You have been logged out', 'success')
-    return redirect(url_for('auth.login'))
+    return redirect(url_for('main.index'))
 
 
 @auth_bp.route('/change-password', methods=['GET', 'POST'])

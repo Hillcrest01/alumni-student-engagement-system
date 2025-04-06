@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+{% block title %}About Us{% endblock %}
+
+{% block content %}
+<section class="py-5" style="background-color: #ECF1F5;">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 mb-4 mb-lg-0">
+                <h2 class="fw-bold mb-4" style="color: #161F37;">About Alumni Connect</h2>
+                <p class="lead mb-4">
+                    Alumni Connect is a platform designed to bridge the gap between current students, 
+                    alumni, and faculty of the Computer Science Department at Egerton University.
+                </p>
+                <p>
+                    Our mission is to create a vibrant community where knowledge, opportunities, and 
+                    experiences are shared to foster professional growth and academic excellence.
+                </p>
+                <div class="mt-4">
+                    <a href="{{ url_for('auth.login') }}" class="btn px-4 py-2 me-2" style="background-color: #161F37; color: white;">
+                        Join Our Community
+                    </a>
+                    <a href="{{ url_for('views.contact') }}" class="btn px-4 py-2" style="background-color: #FFD700; color: #161F37;">
+                        Contact Us
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <img src="{{ url_for('static', filename='index/graduates.jpg') }}" 
+                     alt="About Alumni Connect" 
+                     class="img-fluid rounded shadow">
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-5">
+    <div class="container">
+        <h2 class="fw-bold mb-5 text-center" style="color: #161F37;">Our Core Values</h2>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <div class="mb-3" style="font-size: 2.5rem; color: #FFD700;">
+                            <i class="bi bi-people-fill"></i>
+                        </div>
+                        <h4 style="color: #161F37;">Community</h4>
+                        <p>
+                            Building strong connections between students, alumni, and faculty 
+                            to create a supportive network.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <div class="mb-3" style="font-size: 2.5rem; color: #FFD700;">
+                            <i class="bi bi-lightbulb-fill"></i>
+                        </div>
+                        <h4 style="color: #161F37;">Innovation</h4>
+                        <p>
+                            Encouraging creative thinking and technological advancement 
+                            through collaboration.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <div class="mb-3" style="font-size: 2.5rem; color: #FFD700;">
+                            <i class="bi bi-mortarboard-fill"></i>
+                        </div>
+                        <h4 style="color: #161F37;">Excellence</h4>
+                        <p>
+                            Promoting academic and professional excellence through 
+                            mentorship and resource sharing.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-5" style="background-color: #ECF1F5;">
+    <div class="container">
+        <h2 class="fw-bold mb-5 text-center" style="color: #161F37;">Meet The Team</h2>
+        <div class="row g-4 justify-content-center">
+            <div class="col-md-4 col-lg-3">
+                <div class="card border-0 shadow-sm">
+                    <img src="{{ url_for('static', filename='index/avatar2.jpeg') }}" 
+                         class="card-img-top" 
+                         alt="Team Member"
+                         style="height: 250px; object-fit: cover;">
+                    <div class="card-body text-center">
+                        <h5 style="color: #161F37;">Dr. Zachary Bosire</h5>
+                        <p class="text-muted">Faculty Advisor</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 col-lg-3">
+                <div class="card border-0 shadow-sm">
+                    <img src="{{ url_for('static', filename='index/CV me 😂.png') }}" 
+                         class="card-img-top" 
+                         alt="Team Member"
+                         style="height: 250px; object-fit: cover;">
+                    <div class="card-body text-center">
+                        <h5 style="color: #161F37;">Peter Ochieng</h5>
+                        <p class="text-muted">Platform Developer</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 col-lg-3">
+                <div class="card border-0 shadow-sm">
+                    <img src="{{ url_for('static', filename='index/avatar1.avif') }}" 
+                         class="card-img-top" 
+                         alt="Team Member"
+                         style="height: 250px; object-fit: cover;">
+                    <div class="card-body text-center">
+                        <h5 style="color: #161F37;">Grace Njeri</h5>
+                        <p class="text-muted">Community Manager</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
