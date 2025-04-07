@@ -1,6 +1,6 @@
 from datetime import datetime
 from app import db
-from app.models import Event, Job
+from app.models import Event, Job, User
 from app.utils import utc_to_eat
 from flask import Blueprint, render_template, redirect, url_for, flash, current_app, abort
 
@@ -37,24 +37,38 @@ def convert_job_for_display(job):
         
     }
 
-@main_bp.route('/' , methods = ['GET' , 'POST'])
+@main_bp.route('/', methods=['GET', 'POST'])
 def index():
     now = datetime.utcnow()
-    # Get jobs
-    latest_jobs = Job.query.all()
-    print(f"Total jobs fetched: {len(latest_jobs)}") 
+    
+    # Get counts
+    students_count = User.query.filter_by(role='student').count()
+    alumni_count = User.query.filter_by(role='alumni').count()
+    events_count = Event.query.count()
+    jobs_count = Job.query.count()
 
-        # Get events
+    print(f"Students: {students_count}, Alumni: {alumni_count}, Events: {events_count}, Jobs: {jobs_count}")
+
+    # Get latest jobs (consider adding limits/ordering)
+    latest_jobs = Job.query.order_by(Job.created_at.desc()).limit(3).all()
+    
+    # Get upcoming events
     upcoming_events = Event.query.filter(
         Event.date_time > now,
         Event.is_verified == True
     ).order_by(Event.date_time.asc()).limit(3).all()
+    
     # Convert models for display
     converted_upcoming = [convert_event_for_display(e) for e in upcoming_events]
     converted_jobs = [convert_job_for_display(job) for job in latest_jobs]
 
-    return render_template('index.html',
-                         upcoming_events=converted_upcoming,
-                         latest_jobs=converted_jobs,
-                         current_time=now)
-
+    return render_template(
+        'index.html',
+        upcoming_events=converted_upcoming,
+        latest_jobs=converted_jobs,
+        current_time=now,
+        students=students_count,
+        alumni=alumni_count,
+        events_count=events_count,
+        jobs_count=jobs_count
+    )
