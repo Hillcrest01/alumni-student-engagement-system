@@ -3,6 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
     <title>Alumni Connect - {% block title %}{% endblock %}</title>
     
     <!-- Favicon -->
@@ -97,11 +99,11 @@
       .social-icon {
         font-size: 1.5rem;
         margin: 0 10px;
-        color: #161F37; /* Changed social icon color */
+        color: #ffffff; /* Changed social icon color */
       }
       
       .social-icon:hover {
-        color: #FFD700 !important;
+        color: #ffffff !important;
       }
       
       /* Flash messages styling */

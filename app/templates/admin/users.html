@@ -2,60 +2,128 @@
 {% block title %}Manage Users{% endblock %}
 
 {% block content %}
-<div class="container mt-4">
-    <h2 class="mb-4">User Management</h2>
+<style>
+    .management-card {
+        border: none;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 24px rgba(22, 31, 55, 0.1);
+    }
+
+    .card-header-custom {
+        background: linear-gradient(135deg, #161F37, #0E1527);
+        color: white !important;
+        padding: 1.5rem 2rem;
+    }
+
+    .table-custom {
+        --bs-table-hover-bg: rgba(22, 31, 55, 0.03);
+        border-radius: 8px;
+        margin: 0;
+    }
+
+    .table-custom thead {
+        background: rgba(22, 31, 55, 0.08);
+        color: #161F37;
+    }
+
+    .table-custom th {
+        font-weight: 600;
+        padding: 1rem;
+    }
+
+    .table-custom td {
+        vertical-align: middle;
+        padding: 1rem;
+    }
+
+    .btn-edit {
+        background-color: #E6C200;
+        border-color: #E6C200;
+        color: #161F37;
+        padding: 0.375rem 0.75rem;
+    }
+
+    .btn-edit:hover {
+        background-color: #161F37;
+        border-color: #161F37;
+        color: white;
+    }
+
+    .btn-delete {
+        background-color: #dc3545;
+        border-color: #dc3545;
+        padding: 0.375rem 0.75rem;
+    }
+
+    .btn-delete:hover {
+        background-color: #bb2d3b;
+        border-color: #bb2d3b;
+    }
+
+    .status-icon {
+        font-size: 1.25rem;
+    }
+</style>
+
+<div class="container py-4">
+    <h2 class="fw-bold mb-4" style="color: #161F37;">
+        <i class="bi bi-people-fill me-2"></i>User Management
+    </h2>
     
-    <div class="card shadow">
-        <div class="card-header bg-primary text-white">
-            <h5 class="mb-0">All Users (Total: {{ users|length }})</h5>
+    <div class="management-card">
+        <div class="card-header card-header-custom">
+            <h5 class="mb-0 fw-semibold">All Users (Total: {{ users|length }})</h5>
         </div>
-        <div class="card-body">
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>Email</th>
-                        <th>Role</th>
-                        <th>Verified</th>
-                        <th>Profile Complete</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for user in users %}
-                    <tr>
-                        <td>{{ user.email }}</td>
-                        <td>{{ user.role|capitalize }}</td>
-                        <td>
-                            {% if user.is_verified %}
-                            <i class="bi bi-check-circle-fill text-success"></i>
-                            {% else %}
-                            <i class="bi bi-x-circle-fill text-danger"></i>
-                            {% endif %}
-                        </td>
-                        <td>
-                            {% if user.profile_complete %}
-                            <i class="bi bi-check-circle-fill text-success"></i>
-                            {% else %}
-                            <i class="bi bi-x-circle-fill text-danger"></i>
-                            {% endif %}
-                        </td>
-                        <td>
-                            <a href="{{ url_for('admin.edit_user', user_id=user.id) }}" 
-                               class="btn btn-sm btn-warning me-1">
-                                <i class="bi bi-pencil"></i>
-                            </a>
-                            {% if user != current_user %}
-                            <a href="{{ url_for('admin.delete_user', user_id=user.id) }}" 
-                               class="btn btn-sm btn-danger"
-                               onclick="return confirm('Are you sure?')">
-                                <i class="bi bi-trash"></i>
-                            </a>
-                            {% endif %}
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+        <div class="card-body p-4">
+            <div class="table-responsive">
+                <table class="table table-custom">
+                    <thead>
+                        <tr>
+                            <th>Email</th>
+                            <th>Role</th>
+                            <th>Verified</th>
+                            <th>Profile Complete</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in users %}
+                        <tr>
+                            <td>{{ user.email }}</td>
+                            <td ><span class="badge bg-dark-blue"style="color: #212121;">{{ user.role|capitalize }}</span></td>
+                            <td>
+                                {% if user.is_verified %}
+                                <i class="bi bi-check-circle-fill status-icon text-success"></i>
+                                {% else %}
+                                <i class="bi bi-x-circle-fill status-icon text-danger"></i>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if user.profile_complete %}
+                                <i class="bi bi-check-circle-fill status-icon text-success"></i>
+                                {% else %}
+                                <i class="bi bi-x-circle-fill status-icon text-danger"></i>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <a href="{{ url_for('admin.edit_user', user_id=user.id) }}" 
+                                   class="btn btn-edit me-1">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                {% if user != current_user %}
+                                <a href="{{ url_for('admin.delete_user', user_id=user.id) }}" 
+                                   class="btn btn-delete"
+                                   onclick="return confirm('Are you sure?')">
+                                    <i class="bi bi-trash"></i>
+                                </a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>

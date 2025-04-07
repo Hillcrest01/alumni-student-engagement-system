@@ -2,32 +2,86 @@
 {% block title %}Add User{% endblock %}
 
 {% block content %}
-<div class="container mt-4">
-    <h2 class="mb-4">Add New User</h2>
+<style>
+    .form-card {
+        border: none;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 24px rgba(21, 115, 71, 0.1);
+    }
+
+    .card-header-custom {
+        background: linear-gradient(135deg, #157347, #0d4d32);
+        color: white !important;
+        padding: 1.5rem 2rem;
+        border-radius: 12px 12px 0 0 !important;
+    }
+
+    .form-title {
+        font-weight: 600;
+        letter-spacing: -0.5px;
+        color: #157347;
+        padding-bottom: 0.5rem;
+        border-bottom: 3px solid #E6C200;
+        display: inline-block;
+    }
+
+    .form-control:focus {
+        border-color: #157347;
+        box-shadow: 0 0 0 0.25rem rgba(21, 115, 71, 0.25);
+    }
+
+    .btn-admin-primary {
+        background: #157347;
+        border-color: #157347;
+        color: white;
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
+
+    .btn-admin-primary:hover {
+        background: #0d4d32;
+        border-color: #0d4d32;
+        color: white;
+        transform: translateY(-2px);
+    }
+
+    .invalid-feedback {
+        color: #dc3545;
+        font-size: 0.875em;
+        margin-top: 0.25rem;
+    }
+</style>
+
+<div class="container py-4">
+    <h2 class="form-title mb-4">
+        <i class="bi bi-person-plus me-2"></i>Add New User
+    </h2>
     
-    <div class="card shadow">
-        <div class="card-header bg-primary text-white">
-            <h5 class="mb-0">User Details</h5>
+    <div class="form-card">
+        <div class="card-header card-header-custom">
+            <h5 class="mb-0 fw-semibold">User Details</h5>
         </div>
-        <div class="card-body">
+        <div class="card-body p-4">
             <form method="POST">
                 {{ form.hidden_tag() }}
                 
-                <div class="mb-3">
-                    {{ form.email.label(class="form-label") }}
-                    {{ form.email(class="form-control") }}
+                <div class="mb-4">
+                    {{ form.email.label(class="form-label fw-500 text-green") }}
+                    {{ form.email(class="form-control form-control-lg") }}
                     {% for error in form.email.errors %}
                         <div class="invalid-feedback d-block">{{ error }}</div>
                     {% endfor %}
                 </div>
 
-                <div class="mb-3">
-                    {{ form.role.label(class="form-label") }}
-                    {{ form.role(class="form-select") }}
+                <div class="mb-4">
+                    {{ form.role.label(class="form-label fw-500 text-green") }}
+                    {{ form.role(class="form-select form-select-lg") }}
                 </div>
 
-                <div class="d-grid">
-                    <button type="submit" class="btn btn-primary">
+                <div class="d-grid mt-5">
+                    <button type="submit" class="btn btn-admin-primary py-2">
                         <i class="bi bi-person-plus me-2"></i>Add User
                     </button>
                 </div>

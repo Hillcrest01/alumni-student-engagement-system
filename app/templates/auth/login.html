@@ -2,38 +2,74 @@
 {% block title %}Login{% endblock %}
 
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-md-6 col-lg-4">
-        <div class="card shadow">
-            <div class="card-header bg-primary text-white">
-                <h4 class="mb-0 text-center"><i class="bi bi-box-arrow-in-right me-2"></i>Sign In</h4>
-            </div>
-            <div class="card-body">
-                <form method="POST">
-                    {{ form.hidden_tag() }}
-                    
-                    <div class="mb-3">
-                        {{ form.email.label(class="form-label") }}
-                        {{ form.email(class="form-control") }}
-                        {% for error in form.email.errors %}
-                            <div class="invalid-feedback d-block">{{ error }}</div>
-                        {% endfor %}
-                    </div>
+<style>
+    .auth-card {
+        border: 2px solid #157347;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+    .bg-primary {
+        background-color: #157347 !important;
+        color: #ffffff !important;
+    }
+    .btn-primary {
+        background-color: #157347;
+        border-color: #157347;
+        color: #ffffff;
+        font-weight: 500;
+    }
+    .btn-primary:hover {
+        background-color: #0d4d32;
+        border-color: #0d4d32;
+    }
+    .btn-primary:active {
+        background-color: #0d4d32;
+        border-color: #0d4d32;
+    }
+    .form-control:focus {
+        border-color: #157347;
+        box-shadow: 0 0 0 0.25rem rgba(21, 115, 71, 0.25);
+    }
+    .invalid-feedback {
+        color: #dc3545;
+        font-size: 0.875em;
+    }
+</style>
 
-                    <div class="mb-3">
-                        {{ form.password.label(class="form-label") }}
-                        {{ form.password(class="form-control") }}
-                        {% for error in form.password.errors %}
-                            <div class="invalid-feedback d-block">{{ error }}</div>
-                        {% endfor %}
-                    </div>
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-4">
+            <div class="auth-card shadow">
+                <div class="card-header bg-primary py-3">
+                    <h4 class="mb-0 text-center"><i class="bi bi-box-arrow-in-right me-2"></i>Sign In</h4>
+                </div>
+                <div class="card-body p-4">
+                    <form method="POST">
+                        {{ form.hidden_tag() }}
+                        
+                        <div class="mb-3">
+                            {{ form.email.label(class="form-label") }}
+                            {{ form.email(class="form-control") }}
+                            {% for error in form.email.errors %}
+                                <div class="invalid-feedback d-block">{{ error }}</div>
+                            {% endfor %}
+                        </div>
 
-                    <div class="d-grid">
-                        <button type="submit" class="btn btn-primary">
-                            <i class="bi bi-box-arrow-in-right me-2"></i>Sign In
-                        </button>
-                    </div>
-                </form>
+                        <div class="mb-4">
+                            {{ form.password.label(class="form-label") }}
+                            {{ form.password(class="form-control") }}
+                            {% for error in form.password.errors %}
+                                <div class="invalid-feedback d-block">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary py-2">
+                                <i class="bi bi-box-arrow-in-right me-2"></i>Sign In
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>

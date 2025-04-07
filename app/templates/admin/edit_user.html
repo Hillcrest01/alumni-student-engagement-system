@@ -2,42 +2,102 @@
 {% block title %}Edit User{% endblock %}
 
 {% block content %}
-<div class="container mt-4">
-    <h2 class="mb-4">Edit User: {{ user.email }}</h2>
+<style>
+    .edit-card {
+        border: none;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 24px rgba(22, 31, 55, 0.1);
+    }
+
+    .card-header-custom {
+        background: linear-gradient(135deg, #161F37, #0E1527);
+        color: white !important;
+        padding: 1.5rem 2rem;
+        border-radius: 12px 12px 0 0 !important;
+    }
+
+    .form-label-custom {
+        color: #161F37;
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+    }
+
+    .form-control:focus {
+        border-color: #161F37;
+        box-shadow: 0 0 0 0.25rem rgba(22, 31, 55, 0.15);
+    }
+
+    .form-check-input:checked {
+        background-color: #161F37;
+        border-color: #161F37;
+    }
+
+    .btn-save {
+        background-color: #161F37;
+        border-color: #161F37;
+        color: white;
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
+
+    .btn-save:hover {
+        background-color: #0E1527;
+        border-color: #0E1527;
+        color: white;
+        transform: translateY(-2px);
+    }
+
+    .invalid-feedback {
+        color: #dc3545;
+        font-size: 0.875em;
+        margin-top: 0.25rem;
+    }
+</style>
+
+<div class="container py-4">
+    <h2 class="fw-bold mb-4" style="color: #161F37;">
+        <i class="bi bi-pencil-square me-2"></i>Edit User: {{ user.email }}
+    </h2>
     
-    <div class="card shadow">
-        <div class="card-header bg-primary text-white">
-            <h5 class="mb-0">User Details</h5>
+    <div class="edit-card">
+        <div class="card-header card-header-custom">
+            <h5 class="mb-0 fw-semibold">User Details</h5>
         </div>
-        <div class="card-body">
+        <div class="card-body p-4">
             <form method="POST">
                 {{ form.hidden_tag() }}
                 
-                <div class="mb-3">
-                    {{ form.email.label(class="form-label") }}
-                    {{ form.email(class="form-control") }}
+                <div class="mb-4">
+                    {{ form.email.label(class="form-label-custom") }}
+                    {{ form.email(class="form-control form-control-lg") }}
                     {% for error in form.email.errors %}
                         <div class="invalid-feedback d-block">{{ error }}</div>
                     {% endfor %}
                 </div>
 
-                <div class="mb-3">
-                    {{ form.role.label(class="form-label") }}
-                    {{ form.role(class="form-select") }}
+                <div class="mb-4">
+                    {{ form.role.label(class="form-label-custom") }}
+                    {{ form.role(class="form-select form-select-lg") }}
                 </div>
 
-                <div class="mb-3 form-check">
-                    {{ form.is_verified(class="form-check-input") }}
-                    {{ form.is_verified.label(class="form-check-label") }}
+                <div class="mb-4 ps-1">
+                    <div class="form-check">
+                        {{ form.is_verified(class="form-check-input") }}
+                        {{ form.is_verified.label(class="form-check-label form-label-custom") }}
+                    </div>
                 </div>
 
-                <div class="mb-3 form-check">
-                    {{ form.profile_complete(class="form-check-input") }}
-                    {{ form.profile_complete.label(class="form-check-label") }}
+                <div class="mb-4 ps-1">
+                    <div class="form-check">
+                        {{ form.profile_complete(class="form-check-input") }}
+                        {{ form.profile_complete.label(class="form-check-label form-label-custom") }}
+                    </div>
                 </div>
 
-                <div class="d-grid">
-                    <button type="submit" class="btn btn-primary">
+                <div class="d-grid mt-5">
+                    <button type="submit" class="btn btn-save py-2">
                         <i class="bi bi-save me-2"></i>Save Changes
                     </button>
                 </div>

@@ -1,10 +1,15 @@
 from flask import Flask, render_template
 from config import Config
 from .extensions import db, login_manager, migrate
+from flask_wtf import CSRFProtect
 
 def create_app(config_class=Config):
     app = Flask(__name__)
     app.config.from_object(config_class)
+
+    csrf = CSRFProtect(app)  # Initialize CSRF protection
+    app.config['SECRET_KEY'] = 'your_secret_key'  # Set a secret key for CSRF protection
+    csrf.init_app(app)
 
     # Initialize extensions with app
     db.init_app(app)

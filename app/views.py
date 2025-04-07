@@ -11,8 +11,8 @@ views_bp = Blueprint('views', __name__)
 @views_bp.route('/matches')
 @login_required
 def view_matches():
-    if current_user.role != 'student':
-        return redirect(url_for('auth.profile'))
+    # if current_user.role != 'student':
+    #     return redirect(url_for('auth.profile'))
     
     # Get student's interests
     student_interests = {i.id for i in current_user.interests}
