@@ -103,7 +103,7 @@ def event_detail(event_id):
     converted_event = convert_event_for_display(event)
     return render_template('events/detail.html', event=converted_event)
 
-@events_bp.route('/<int:event_id>/delete', methods=['POST'])
+@events_bp.route('/<int:event_id>/delete', methods=['POST' , 'GET' , 'DELETE'])
 @login_required
 def delete_event(event_id):
     event = Event.query.get_or_404(event_id)

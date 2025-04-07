@@ -2,27 +2,72 @@
 {% block title %}Message {{ recipient.full_name }}{% endblock %}
 
 {% block content %}
-<div class="container mt-4">
-    <div class="card shadow">
-        <div class="card-header bg-primary text-white">
-            <h4 class="mb-0">Message {{ recipient.full_name }}</h4>
+<div class="container py-4">
+    <div class="card shadow-lg border-0">
+        <div class="card-header bg-dark-blue text-white py-3">
+            <h4 class="mb-0"><i class="bi bi-envelope-plus me-2"></i>Message {{ recipient.full_name }}</h4>
         </div>
-        <div class="card-body">
+        <div class="card-body p-4">
             <form method="POST">
-                <div class="mb-3">
-                    <textarea class="form-control" name="content" rows="4" 
-                              placeholder="Write your message..." required></textarea>
+                <div class="mb-4">
+                    <textarea class="form-control message-input" 
+                              name="content" 
+                              rows="5"
+                              placeholder="Write your message..."
+                              required></textarea>
                 </div>
-                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                    <a href="{{ url_for('views.view_matches') }}" class="btn btn-secondary">
-                        Cancel
+                <div class="d-flex gap-3 justify-content-end mt-4">
+                    <a href="{{ url_for('views.view_matches') }}" class="btn btn-outline-dark-blue">
+                        <i class="bi bi-x-circle me-2"></i>Cancel
                     </a>
-                    <button type="submit" class="btn btn-primary">
-                        Send Message
+                    <button type="submit" class="btn btn-gold">
+                        <i class="bi bi-send me-2"></i>Send Message
                     </button>
                 </div>
             </form>
         </div>
     </div>
 </div>
+
+<style>
+    .bg-dark-blue {
+        background-color: #161F37;
+        border-radius: 8px 8px 0 0;
+    }
+    
+    .btn-outline-dark-blue {
+        border: 1px solid #161F37;
+        color: #161F37;
+        padding: 0.75rem 1.5rem;
+    }
+    
+    .btn-outline-dark-blue:hover {
+        background-color: #161F37;
+        color: white;
+    }
+    
+    .btn-gold {
+        background-color: #E6C200;
+        color: #161F37;
+        padding: 0.75rem 1.5rem;
+        font-weight: 500;
+        border: none;
+    }
+    
+    .btn-gold:hover {
+        background-color: #161F37;
+        color: white;
+    }
+    
+    .message-input {
+        border: 1px solid rgba(22, 31, 55, 0.2);
+        border-radius: 8px;
+        padding: 1rem;
+    }
+    
+    .message-input:focus {
+        border-color: #E6C200;
+        box-shadow: 0 0 0 0.25rem rgba(230, 194, 0, 0.25);
+    }
+</style>
 {% endblock %}

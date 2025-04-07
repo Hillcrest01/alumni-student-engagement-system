@@ -2,10 +2,83 @@
 {% block title %}Contact Messages{% endblock %}
 
 {% block content %}
-<div class="container py-5">
-    <h2 class="fw-bold mb-4" style="color: #161F37;">Contact Messages</h2>
+<style>
+    .message-table {
+        --bs-table-hover-bg: rgba(22, 31, 55, 0.03);
+        border-radius: 8px;
+        overflow: hidden;
+    }
     
-    <div class="table-responsive">
+    .message-table thead {
+        background: linear-gradient(135deg, #161F37, #0E1527);
+        color: white;
+    }
+    
+    .message-table th {
+        font-weight: 500;
+        padding: 1rem;
+    }
+    
+    .message-table td {
+        vertical-align: middle;
+        padding: 1rem;
+        border-bottom: 1px solid rgba(22, 31, 55, 0.1);
+    }
+    
+    .badge-status {
+        padding: 0.5rem 0.75rem;
+        border-radius: 6px;
+        font-weight: 500;
+    }
+    
+    .badge-new {
+        background: rgba(230, 194, 0, 0.15);
+        color: #161F37;
+    }
+    
+    .badge-read {
+        background: rgba(22, 31, 55, 0.1);
+        color: #161F37;
+    }
+    
+    .badge-responded {
+        background: rgba(21, 115, 71, 0.1);
+        color: #157347;
+    }
+    
+    .btn-message-action {
+        border: 1px solid #161F37;
+        color: #161F37;
+        padding: 0.375rem 0.75rem;
+        border-radius: 6px;
+        transition: all 0.2s ease;
+    }
+    
+    .btn-message-action:hover {
+        background: #161F37;
+        color: white;
+    }
+    
+    .modal-header-custom {
+        background: linear-gradient(135deg, #161F37, #0E1527);
+        color: white;
+        border-radius: 8px 8px 0 0;
+        padding: 1.25rem;
+    }
+    
+    .response-card {
+        border: 1px solid rgba(22, 31, 55, 0.1);
+        border-radius: 8px;
+        background: rgba(22, 31, 55, 0.03);
+    }
+</style>
+
+<div class="container py-4">
+    <h2 class="fw-bold mb-4" style="color: #161F37;">
+        <i class="bi bi-envelope-exclamation me-2"></i>Contact Messages
+    </h2>
+    
+    <div class="table-responsive message-table">
         <table class="table table-hover">
             <thead>
                 <tr>
@@ -18,65 +91,86 @@
             </thead>
             <tbody>
                 {% for message in messages %}
-                <tr class="{% if not message.is_read %}table-info{% endif %}">
+                <tr class="{% if not message.is_read %}bg-light{% endif %}">
                     <td>
-                        <strong>{{ message.name if message.name else message.user.username }}</strong>
-                        <br>{{ message.email }}
+                        <div class="fw-500" style="color: #161F37;">
+                            {{ message.name if message.name else message.user.username }}
+                        </div>
+                        <div class="text-muted small">{{ message.email }}</div>
                     </td>
                     <td>{{ message.message|truncate(100) }}</td>
                     <td>{{ message.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
                     <td>
                         {% if message.is_responded %}
-                            <span class="badge bg-success">Responded</span>
+                            <span class="badge badge-status badge-responded">
+                                <i class="bi bi-check-circle me-1"></i>Responded
+                            </span>
                         {% elif message.is_read %}
-                            <span class="badge bg-primary">Read</span>
+                            <span class="badge badge-status badge-read">
+                                <i class="bi bi-envelope-open me-1"></i>Read
+                            </span>
                         {% else %}
-                            <span class="badge bg-warning text-dark">New</span>
+                            <span class="badge badge-status badge-new">
+                                <i class="bi bi-envelope me-1"></i>New
+                            </span>
                         {% endif %}
                     </td>
                     <td>
-                        <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" 
+                        <button class="btn btn-message-action" data-bs-toggle="modal" 
                                 data-bs-target="#messageModal{{ message.id }}">
                             View
                         </button>
                     </td>
                 </tr>
                 
-                <!-- Modal for each message -->
+                <!-- Modal -->
                 <div class="modal fade" id="messageModal{{ message.id }}" tabindex="-1">
                     <div class="modal-dialog modal-lg">
                         <div class="modal-content">
-                            <div class="modal-header" style="background-color: #161F37; color: white;">
-                                <h5 class="modal-title">Message from {{ message.name if message.name else message.user.username }}</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            <div class="modal-header modal-header-custom">
+                                <h5 class="modal-title">
+                                    Message from {{ message.name if message.name else message.user.username }}
+                                </h5>
+                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                             </div>
-                            <div class="modal-body">
-                                <div class="mb-3">
-                                    <strong>Email:</strong> {{ message.email }}<br>
-                                    <strong>Date:</strong> {{ message.created_at.strftime('%Y-%m-%d %H:%M') }}
-                                </div>
-                                <div class="card mb-3">
-                                    <div class="card-body">
-                                        <p>{{ message.message }}</p>
+                            <div class="modal-body p-4">
+                                <div class="mb-4">
+                                    <div class="row g-3">
+                                        <div class="col-md-6">
+                                            <div class="text-muted small">Email:</div>
+                                            <div style="color: #161F37;">{{ message.email }}</div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="text-muted small">Date:</div>
+                                            <div style="color: #161F37;">{{ message.created_at.strftime('%Y-%m-%d %H:%M') }}</div>
+                                        </div>
                                     </div>
                                 </div>
                                 
+                                <div class="response-card p-3 mb-4">
+                                    <p class="mb-0" style="color: #161F37;">{{ message.message }}</p>
+                                </div>
+                                
                                 {% if message.response %}
-                                <div class="card bg-light">
-                                    <div class="card-header">
-                                        <strong>Your Response:</strong>
-                                    </div>
-                                    <div class="card-body">
-                                        <p>{{ message.response }}</p>
-                                    </div>
+                                <div class="response-card p-3 mb-4">
+                                    <div class="text-muted small mb-2">Your Response:</div>
+                                    <p class="mb-0" style="color: #161F37;">{{ message.response }}</p>
                                 </div>
                                 {% else %}
                                 <form method="POST" action="{{ url_for('views.reply_to_message', message_id=message.id) }}">
-                                    <div class="mb-3">
-                                        <label class="form-label">Your Response</label>
-                                        <textarea class="form-control" name="response" rows="4" required></textarea>
+                                    <div class="mb-4">
+                                        <label class="form-label fw-500" style="color: #161F37;">Your Response</label>
+                                        <textarea class="form-control" name="response" rows="4" 
+                                                  style="border-color: rgba(22, 31, 55, 0.2);" required></textarea>
                                     </div>
-                                    <button type="submit" class="btn btn-primary">Send Response</button>
+                                    <div class="d-flex gap-2 justify-content-end">
+                                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                                            Cancel
+                                        </button>
+                                        <button type="submit" class="btn btn-primary" style="background-color: #161F37; border-color: #161F37;">
+                                            Send Response
+                                        </button>
+                                    </div>
                                 </form>
                                 {% endif %}
                             </div>
