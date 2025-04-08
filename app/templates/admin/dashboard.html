@@ -195,6 +195,27 @@
                 </div>
             </div>
         </div>
+        <div class="row">
+            <div class="col-md-3">
+                <div class="admin-card stats-card">
+                    <div class="card-body text-center py-4">
+                        <h5 class="card-title mb-3 text-muted">Verification Requests</h5>
+                        <p class="stats-number">
+                            {% if pending_requests_count > 0 %}
+                                {{ pending_requests_count }}
+                            {% else %}
+                                0
+                            {% endif %}
+                        </p>
+                        <a href="{{ url_for('admin.verification_requests') }}" class="btn btn-sm btn-success mt-2">
+                            View Requests
+                        </a>
+                    </div>
+                </div>
+            </div>
+        
+        </div>
+        
     </div>
 
     <!-- Action Buttons -->
@@ -205,12 +226,12 @@
         <a href="{{ url_for('admin.add_user') }}" class="btn btn-admin-primary">
             <i class="bi bi-person-plus me-2"></i> Add User
         </a>
-        <a href="#pending-events" class="btn btn-admin-secondary">
+        <!-- <a href="#pending-events" class="btn btn-admin-secondary">
             <i class="bi bi-calendar-check me-2"></i> Review Events
         </a>
         <a href="#pending-jobs" class="btn btn-admin-secondary">
             <i class="bi bi-briefcase me-2"></i> Review Jobs
-        </a>
+        </a> -->
         <a href="{{ url_for('views.contact_messages') }}" class="btn btn-admin-secondary">
             <i class="bi bi-envelope me-2"></i> Contact Messages
         </a>
@@ -244,6 +265,7 @@
                             <td>
                                 <div class="d-flex gap-2">
                                     <form action="{{ url_for('admin.verify_event', event_id=event.id) }}" method="POST">
+                                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                                         <button type="submit" class="btn btn-sm btn-admin-primary">
                                             <i class="bi bi-check-circle"></i> Approve
                                         </button>
@@ -253,6 +275,7 @@
                                         <i class="bi bi-eye"></i> View
                                     </a>
                                     <form action="{{ url_for('admin.delete_event', event_id=event.id) }}" method="POST">
+                                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                                         <button type="submit" class="btn btn-sm btn-danger">
                                             <i class="bi bi-trash"></i> Delete
                                         </button>
@@ -306,15 +329,18 @@
                             <td>
                                 <div class="d-flex gap-2">
                                     <form action="{{ url_for('admin.approve_job', job_id=job.id) }}" method="POST">
+                                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                                         <button type="submit" class="btn btn-sm btn-admin-primary">
                                             <i class="bi bi-check-circle"></i> Approve
                                         </button>
                                     </form>
+                                    
                                     <a href="{{ url_for('jobs.job_detail', job_id=job.id) }}" 
                                        class="btn btn-sm btn-admin-secondary">
                                         <i class="bi bi-eye"></i> View
                                     </a>
                                     <form action="{{ url_for('admin.delete_job', job_id=job.id) }}" method="POST">
+                                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                                         <button type="submit" class="btn btn-sm btn-danger">
                                             <i class="bi bi-trash"></i> Delete
                                         </button>

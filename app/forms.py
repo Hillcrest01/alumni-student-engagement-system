@@ -96,3 +96,11 @@ class ContactForm(FlaskForm):
 
 class ContactFormLoggedIn(FlaskForm):
     message = TextAreaField('Your Message', validators=[DataRequired()])
+
+
+class VerificationForm(FlaskForm):
+    email = StringField('Email Address', validators=[
+        DataRequired(),
+        Email()
+    ])
+    submit = SubmitField('Request Verification')

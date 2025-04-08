@@ -1,9 +1,9 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, request, abort
 from flask_login import login_user, logout_user, current_user, login_required
 from app.extensions import db
-from app.models import User, Interest, Event
+from app.models import User, Interest, Event, VerificationRequest
 from app.utils import utc_to_eat
-from app.forms import LoginForm, ChangePasswordForm, CompleteProfileForm
+from app.forms import LoginForm, ChangePasswordForm, CompleteProfileForm, VerificationForm
 from datetime import datetime
 
 auth_bp = Blueprint('auth', __name__)
@@ -153,3 +153,23 @@ def update_availability():
     
     flash('Availability status updated!', 'success')
     return redirect(url_for('auth.profile'))
+
+
+@auth_bp.route('/request-verification', methods=['GET', 'POST'])
+def request_verification():
+    form = VerificationForm()
+    
+    if form.validate_on_submit():
+        existing_request = VerificationRequest.query.filter_by(email=form.email.data).first()
+        if existing_request:
+            flash('This email already has a pending request', 'warning')
+            return redirect(url_for('main.request_verification'))
+            
+        new_request = VerificationRequest(email=form.email.data)
+        db.session.add(new_request)
+        db.session.commit()
+        
+        flash('Verification request submitted! We will contact you soon.', 'success')
+        return redirect(url_for('main.index'))
+    
+    return render_template('auth/request_verification.html', form=form)
