@@ -34,6 +34,15 @@
         color: #dc3545;
         font-size: 0.875em;
     }
+    .auth-links a {
+        color: #157347;
+        text-decoration: none;
+        font-weight: 500;
+    }
+    .auth-links a:hover {
+        color: #0d4d32;
+        text-decoration: underline;
+    }
 </style>
 
 <div class="container py-5">
@@ -68,7 +77,18 @@
                                 <i class="bi bi-box-arrow-in-right me-2"></i>Sign In
                             </button>
                         </div>
+
+                        <div class="text-center mt-3 auth-links">
+                            <a href="{{ url_for('auth.change_password') }}">Forgot Password?</a>
+                        </div>
                     </form>
+
+                    <div class="mt-4 text-center auth-links">
+                        <p class="mb-1">New to the system?</p>
+                        <a href="{{ url_for('auth.request_verification') }}">
+                            Request account verification
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>

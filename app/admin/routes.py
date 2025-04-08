@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, abort
 from flask_login import login_required, current_user
 from app import db
-from app.models import User, Interest, Event, Job
+from app.models import User, Interest, Event, Job, VerificationRequest
 from app.forms import AdminAddUserForm, AdminEditUserForm
 from werkzeug.security import generate_password_hash
 from datetime import datetime
@@ -25,9 +25,10 @@ def dashboard():
         ).count(),
         'pending_verifications': User.query.filter_by(is_verified=False).count(),
         'pending_events_count': Event.query.filter_by(is_verified=False).count(),
-        'pending_jobs_count': Job.query.filter_by(is_verified=False).count()
+        'pending_jobs_count': Job.query.filter_by(is_verified=False).count(),
     }
     
+    pending_requests_count = VerificationRequest.query.filter_by(status='pending').count()
     # Process pending events
     pending_events = []
     for event in Event.query.filter_by(is_verified=False).order_by(Event.date_time.asc()).all():
@@ -61,7 +62,7 @@ def dashboard():
                          stats=stats,
                          pending_events=pending_events,
                          pending_jobs=pending_jobs,
-                         all_pending=all_pending)
+                         all_pending=all_pending , pending_requests_count=pending_requests_count)
 
 @admin_bp.route('/users')
 def manage_users():
@@ -164,3 +165,28 @@ def delete_job(job_id):
 def list_jobs_pending():
     pending_jobs = Job.query.filter_by(is_verified=False).all()
     return render_template('admin/pending_jobs.html', jobs=pending_jobs)
+
+
+@admin_bp.route('/verification-requests')
+@login_required
+def verification_requests():
+    requests = VerificationRequest.query.order_by(VerificationRequest.created_at.desc()).all()
+    pending_requests_count = VerificationRequest.query.filter_by(status='pending').count()
+    return render_template('admin/verification_requests.html', requests=requests , pending_requests_count=pending_requests_count)
+
+@admin_bp.route('/verify-request/<int:request_id>/<status>')
+@login_required
+def handle_verification(request_id, status):
+    v_request = VerificationRequest.query.get_or_404(request_id)
+    
+    if status not in ['approved', 'rejected']:
+        abort(400)
+    
+    v_request.status = status
+    v_request.reviewed_at = datetime.utcnow()
+    v_request.admin_id = current_user.id  # If you want to track which admin handled it
+    
+    db.session.commit()
+    
+    flash(f'Request {status} successfully', 'success')
+    return redirect(url_for('admin.verification_requests'))

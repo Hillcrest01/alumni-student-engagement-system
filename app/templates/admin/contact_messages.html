@@ -158,6 +158,8 @@
                                 </div>
                                 {% else %}
                                 <form method="POST" action="{{ url_for('views.reply_to_message', message_id=message.id) }}">
+                                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                    
                                     <div class="mb-4">
                                         <label class="form-label fw-500" style="color: #161F37;">Your Response</label>
                                         <textarea class="form-control" name="response" rows="4" 
@@ -172,6 +174,7 @@
                                         </button>
                                     </div>
                                 </form>
+                                
                                 {% endif %}
                             </div>
                         </div>
