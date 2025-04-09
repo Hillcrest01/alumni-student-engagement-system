@@ -1,6 +1,6 @@
 from flask import Blueprint, redirect, url_for, render_template, flash, request
 from flask_login import login_required, current_user
-from app.models import User, Interest, Event, ContactMessage
+from app.models import User, Interest, Event, ContactMessage, Announcement
 from datetime import datetime
 from app.utils import utc_to_eat
 from app import db
@@ -102,4 +102,10 @@ def reply_to_message(message_id):
         flash('Response cannot be empty', 'danger')
     
     return redirect(url_for('views.contact_messages'))
+
+@views_bp.route('/announcements')
+@login_required
+def user_announcements():
+    announcements = Announcement.query.order_by(Announcement.created_at.desc()).all()
+    return render_template('announcements.html', announcements=announcements)
 

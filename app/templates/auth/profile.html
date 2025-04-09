@@ -175,10 +175,14 @@
                                         View Matches
                                     </a>
                                     <div class="d-flex gap-2">
+                                        <a href="{{ url_for('auth.change_password') }}" class="btn btn-outline-gold">
+                                            Change Password
+                                        </a>
+                                    </div>
+                                    <div class="d-flex gap-2">
                                         <a href="{{ url_for('auth.complete_profile') }}" class="btn btn-outline-gold">
                                             Edit Profile
                                         </a>
-                                        <!-- Add Admin button here if needed -->
                                     </div>
                                 </div>
                             </div>

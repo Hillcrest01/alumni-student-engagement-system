@@ -43,10 +43,17 @@ def login():
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
         
-        if not user or not user.check_password(form.password.data):
-            flash('Invalid email or password', 'danger')
+        # Check if email exists
+        if not user:
+            flash('No account found with this email address.', 'warning')
             return redirect(url_for('auth.login'))
         
+        # Check password validity
+        if not user.check_password(form.password.data):
+            flash('Incorrect password.', 'warning')
+            return redirect(url_for('auth.login'))
+        
+        # Check if account is verified
         if not user.is_verified:
             flash('Account not verified. Please contact admin.', 'warning')
             return redirect(url_for('auth.login'))
@@ -163,7 +170,7 @@ def request_verification():
         existing_request = VerificationRequest.query.filter_by(email=form.email.data).first()
         if existing_request:
             flash('This email already has a pending request', 'warning')
-            return redirect(url_for('main.request_verification'))
+            return redirect(url_for('auth.request_verification'))
             
         new_request = VerificationRequest(email=form.email.data)
         db.session.add(new_request)

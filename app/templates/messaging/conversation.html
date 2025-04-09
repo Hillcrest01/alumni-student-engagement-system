@@ -44,6 +44,22 @@
     </div>
 </div>
 
+<!-- <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const textarea = document.querySelector('textarea[name="content"]');
+        
+        textarea.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                const form = this.closest('form');
+                if (form.reportValidity()) {
+                    form.submit();
+                }
+            }
+        });
+    });
+</script> -->
+
 <style>
     .bg-dark-blue {
         background-color: #161F37;

@@ -1,7 +1,7 @@
-from flask import Blueprint, render_template, redirect, url_for, flash, abort
+from flask import Blueprint, render_template, redirect, url_for, flash, abort, request
 from flask_login import login_required, current_user
 from app import db
-from app.models import User, Interest, Event, Job, VerificationRequest
+from app.models import User, Interest, Event, Job, VerificationRequest, Announcement
 from app.forms import AdminAddUserForm, AdminEditUserForm
 from werkzeug.security import generate_password_hash
 from datetime import datetime
@@ -190,3 +190,47 @@ def handle_verification(request_id, status):
     
     flash(f'Request {status} successfully', 'success')
     return redirect(url_for('admin.verification_requests'))
+
+
+@admin_bp.route('/announcements')
+@login_required
+def list_announcements():
+    announcements = Announcement.query.order_by(Announcement.created_at.desc()).all()
+    return render_template('admin/announcements.html', announcements=announcements)
+
+# Create Announcement
+@admin_bp.route('/announcements/create', methods=['GET', 'POST'])
+@login_required
+def create_announcement():
+    if request.method == 'POST':
+        title = request.form['title']
+        content = request.form['content']
+        new_announcement = Announcement(title=title, content=content)
+        db.session.add(new_announcement)
+        db.session.commit()
+        flash('Announcement created successfully!', 'success')
+        return redirect(url_for('admin.list_announcements'))
+    return render_template('admin/create_announcement.html')
+
+# Edit Announcement
+@admin_bp.route('/announcements/edit/<int:id>', methods=['GET', 'POST'])
+@login_required
+def edit_announcement(id):
+    announcement = Announcement.query.get_or_404(id)
+    if request.method == 'POST':
+        announcement.title = request.form['title']
+        announcement.content = request.form['content']
+        db.session.commit()
+        flash('Announcement updated successfully!', 'success')
+        return redirect(url_for('admin.list_announcements'))
+    return render_template('admin/edit_announcement.html', announcement=announcement)
+
+# Delete Announcement
+@admin_bp.route('/announcements/delete/<int:id>', methods=['POST'])
+@login_required
+def delete_announcement(id):
+    announcement = Announcement.query.get_or_404(id)
+    db.session.delete(announcement)
+    db.session.commit()
+    flash('Announcement deleted successfully!', 'success')
+    return redirect(url_for('admin.list_announcements'))

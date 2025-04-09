@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% block title %}Announcements{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="mb-0" style="color: #161F37;">Manage Announcements</h2>
+        <a href="{{ url_for('admin.create_announcement') }}" class="btn btn-success" style="background-color: #157347; border-color: #157347;">
+            <i class="bi bi-plus-circle"></i> Create New Announcement
+        </a>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            {% for announcement in announcements %}
+            <div class="card shadow-sm mb-4 border-0">
+                <div class="card-header bg-dark-blue text-white d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">{{ announcement.title }}</h5>
+                    <small class="text-light">{{ announcement.created_at.strftime('%Y-%m-%d %H:%M') }}</small>
+                </div>
+                <div class="card-body" style="background-color: rgba(22, 31, 55, 0.05);">
+                    <p class="card-text">{{ announcement.content }}</p>
+                    <div class="d-flex gap-2 mt-3">
+                        <a href="{{ url_for('admin.edit_announcement', id=announcement.id) }}" 
+                           class="btn btn-outline-success btn-sm">
+                            <i class="bi bi-pencil"></i> Edit
+                        </a>
+                        <form action="{{ url_for('admin.delete_announcement', id=announcement.id) }}" method="post">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                            <button type="submit" class="btn btn-outline-danger btn-sm">
+                                <i class="bi bi-trash"></i> Delete
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<style>
+    .bg-dark-blue {
+        background-color: #161F37;
+    }
+    
+    .btn-success {
+        background-color: #157347;
+        border-color: #157347;
+    }
+    
+    .btn-success:hover {
+        background-color: #115d38;
+        border-color: #115d38;
+    }
+    
+    .btn-outline-success {
+        color: #157347;
+        border-color: #157347;
+    }
+    
+    .btn-outline-success:hover {
+        background-color: #157347;
+        color: white;
+    }
+    
+    .card {
+        transition: transform 0.2s ease;
+    }
+    
+    .card:hover {
+        transform: translateY(-3px);
+    }
+    
+    .bi {
+        margin-right: 5px;
+    }
+</style>
+{% endblock %}
