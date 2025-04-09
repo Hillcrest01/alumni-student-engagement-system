@@ -3,10 +3,16 @@ from config import Config
 from .extensions import db, login_manager, migrate
 from flask_wtf import CSRFProtect
 from flask_mail import Mail, Message
+from app.models import Announcement
 
 def create_app(config_class=Config):
     app = Flask(__name__)
     app.config.from_object(config_class)
+
+    @app.context_processor
+    def inject_latest_announcement():
+        latest_announcement = Announcement.query.order_by(Announcement.created_at.desc()).first()
+        return dict(get_latest_announcement=lambda: latest_announcement)
 
     csrf = CSRFProtect(app)  # Initialize CSRF protection
     app.config['SECRET_KEY'] = 'your_secret_key'  # Set a secret key for CSRF protection
@@ -33,17 +39,19 @@ def create_app(config_class=Config):
     def apply_security_headers(response):
 
         csp_policy = (
-        "default-src 'self';"
-        "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net;"
-        "script-src 'self' https://cdn.jsdelivr.net;"
-        "font-src 'self' data: https://cdn.jsdelivr.net;;"
-        "img-src 'self' data:;"
+        "default-src 'self'; "
+        "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://fonts.googleapis.com; "
+        "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; "
+        "font-src 'self' data: https://cdn.jsdelivr.net https://fonts.googleapis.com; "
+        "img-src 'self' data:; "
         "connect-src 'self';"
-    )
+        )
+
         response.headers['Content-Security-Policy'] = csp_policy
         response.headers['X-Content-Type-Options'] = 'nosniff'
         response.headers['X-Frame-Options'] = 'DENY'
         return response
+
 
     # Import blueprints and models AFTER initializing extensions
     with app.app_context():

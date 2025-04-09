@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% block title %}Edit Announcement{% endblock %}
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow border-0">
+                <div class="card-header bg-dark-blue text-white">
+                    <h3 class="mb-0">Edit Announcement</h3>
+                </div>
+                <div class="card-body" style="background-color: rgba(22, 31, 55, 0.05);">
+                    <form method="post">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        
+                        <div class="mb-4">
+                            <label class="form-label fw-bold" style="color: #161F37;">
+                                <i class="bi bi-pencil"></i> Title
+                            </label>
+                            <input type="text" name="title" class="form-control form-control-lg border-dark-blue" 
+                                   value="{{ announcement.title }}" required 
+                                   placeholder="Enter announcement title">
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-bold" style="color: #161F37;">
+                                <i class="bi bi-file-text"></i> Content
+                            </label>
+                            <textarea name="content" class="form-control border-dark-blue" 
+                                     required rows="6" placeholder="Write your announcement content">{{ announcement.content }}</textarea>
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-lg" 
+                                    style="background-color: #157347; color: white;">
+                                <i class="bi bi-save"></i> Update Announcement
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .bg-dark-blue {
+        background-color: #161F37;
+    }
+    
+    .border-dark-blue {
+        border-color: #161F37 !important;
+    }
+    
+    .form-control:focus {
+        border-color: #157347;
+        box-shadow: 0 0 0 0.25rem rgba(21, 115, 71, 0.25);
+    }
+    
+    .form-control::placeholder {
+        color: #6c757d;
+        opacity: 0.7;
+    }
+    
+    .card {
+        transition: transform 0.2s ease;
+    }
+    
+    .card:hover {
+        transform: translateY(-3px);
+    }
+    
+    .bi {
+        margin-right: 8px;
+    }
+</style>
+{% endblock %}
