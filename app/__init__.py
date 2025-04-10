@@ -23,7 +23,7 @@ def create_app(config_class=Config):
     login_manager.init_app(app)
     migrate.init_app(app, db)
 
-    #Initialize the flask maill here
+    #Initialize the flask mail here
     mail = Mail(app)
     
     # Configure login manager

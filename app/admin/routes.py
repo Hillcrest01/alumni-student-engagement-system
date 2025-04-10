@@ -1,10 +1,12 @@
-from flask import Blueprint, render_template, redirect, url_for, flash, abort, request
+from io import BytesIO
+from flask import Blueprint, render_template, redirect, url_for, flash, abort, request, send_file
 from flask_login import login_required, current_user
 from app import db
 from app.models import User, Interest, Event, Job, VerificationRequest, Announcement
 from app.forms import AdminAddUserForm, AdminEditUserForm
 from werkzeug.security import generate_password_hash
 from datetime import datetime
+from app.reports import generate_system_report
 
 admin_bp = Blueprint('admin', __name__, url_prefix='/admin')
 
@@ -234,3 +236,21 @@ def delete_announcement(id):
     db.session.commit()
     flash('Announcement deleted successfully!', 'success')
     return redirect(url_for('admin.list_announcements'))
+
+@admin_bp.route('/generate-report', methods=['POST'])
+def generate_report():
+    # Get report parameters from form
+    report_type = request.form.get('report_type', 'full')
+    start_date = request.form.get('start_date')
+    end_date = request.form.get('end_date')
+
+    # Generate PDF
+    pdf_buffer = generate_system_report(start_date, end_date)
+    
+    # Send as downloadable file
+    return send_file(
+        pdf_buffer,
+        mimetype='application/pdf',
+        as_attachment=True,
+        download_name=f'system_report_{datetime.now().strftime("%Y%m%d")}.pdf'
+    )
