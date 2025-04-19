@@ -7,6 +7,7 @@ from app.forms import AdminAddUserForm, AdminEditUserForm
 from werkzeug.security import generate_password_hash
 from datetime import datetime
 from app.reports import generate_system_report
+from app.emails import send_email  # Email integration
 
 admin_bp = Blueprint('admin', __name__, url_prefix='/admin')
 
@@ -18,7 +19,6 @@ def check_admin():
 
 @admin_bp.route('/dashboard')
 def dashboard():
-    # Get dashboard statistics
     stats = {
         'total_users': User.query.count(),
         'active_alumni': User.query.filter(
@@ -31,7 +31,6 @@ def dashboard():
     }
     
     pending_requests_count = VerificationRequest.query.filter_by(status='pending').count()
-    # Process pending events
     pending_events = []
     for event in Event.query.filter_by(is_verified=False).order_by(Event.date_time.asc()).all():
         pending_events.append({
@@ -42,7 +41,6 @@ def dashboard():
             'type': 'event'
         })
     
-    # Process pending jobs
     pending_jobs = []
     for job in Job.query.filter_by(is_verified=False).order_by(Job.created_at.asc()).all():
         pending_jobs.append({
@@ -53,7 +51,6 @@ def dashboard():
             'type': 'job'
         })
     
-    # Combine and sort all pending items
     all_pending = sorted(
         pending_events + pending_jobs,
         key=lambda x: x['date_str'],
@@ -121,13 +118,21 @@ def delete_user(user_id):
     flash('User deleted successfully', 'success')
     return redirect(url_for('admin.manage_users'))
 
-
-
 @admin_bp.route('/verify-event/<int:event_id>', methods=['POST'])
 def verify_event(event_id):
     event = Event.query.get_or_404(event_id)
     event.is_verified = True
     db.session.commit()
+    
+    # Send approval email
+    send_email(
+        to=event.creator.email,
+        subject=f"Event Approved: {event.title}",
+        template="event_approved.html",
+        user=event.creator,
+        event=event
+    )
+    
     flash(f'Event "{event.title}" approved successfully', 'success')
     return redirect(url_for('admin.dashboard'))
 
@@ -139,19 +144,26 @@ def delete_event(event_id):
     flash('Event deleted successfully', 'success')
     return redirect(url_for('admin.dashboard'))
 
-
 @admin_bp.route('/verify-events')
 def verify_events():
     pending_events = Event.query.filter_by(is_verified=False).all()
     return render_template('admin/verify_events.html', events=pending_events)
 
-
-#jobs starts here
 @admin_bp.route('/approve-job/<int:job_id>', methods=['POST'])
 def approve_job(job_id):
     job = Job.query.get_or_404(job_id)
     job.is_verified = True
     db.session.commit()
+    
+    # Send approval email
+    send_email(
+        to=job.creator.email,
+        subject=f"Job Approved: {job.title}",
+        template="emails/job_approved.html",
+        user=job.creator,
+        job=job
+    )
+    
     flash(f'Job "{job.title}" approved successfully', 'success')
     return redirect(url_for('admin.dashboard'))
 
@@ -167,7 +179,6 @@ def delete_job(job_id):
 def list_jobs_pending():
     pending_jobs = Job.query.filter_by(is_verified=False).all()
     return render_template('admin/pending_jobs.html', jobs=pending_jobs)
-
 
 @admin_bp.route('/verification-requests')
 @login_required
@@ -186,13 +197,23 @@ def handle_verification(request_id, status):
     
     v_request.status = status
     v_request.reviewed_at = datetime.utcnow()
-    v_request.admin_id = current_user.id  # If you want to track which admin handled it
+    v_request.admin_id = current_user.id
+    
+    if status == 'approved':
+        user = User.query.filter_by(email=v_request.email).first()
+        if user:
+            user.is_verified = True
+            send_email(
+                to=user.email,
+                subject="Account Verification Approved",
+                template="emails/verification_approved.html",
+                user=user
+            )
     
     db.session.commit()
     
     flash(f'Request {status} successfully', 'success')
     return redirect(url_for('admin.verification_requests'))
-
 
 @admin_bp.route('/announcements')
 @login_required
@@ -200,7 +221,6 @@ def list_announcements():
     announcements = Announcement.query.order_by(Announcement.created_at.desc()).all()
     return render_template('admin/announcements.html', announcements=announcements)
 
-# Create Announcement
 @admin_bp.route('/announcements/create', methods=['GET', 'POST'])
 @login_required
 def create_announcement():
@@ -214,7 +234,6 @@ def create_announcement():
         return redirect(url_for('admin.list_announcements'))
     return render_template('admin/create_announcement.html')
 
-# Edit Announcement
 @admin_bp.route('/announcements/edit/<int:id>', methods=['GET', 'POST'])
 @login_required
 def edit_announcement(id):
@@ -227,7 +246,6 @@ def edit_announcement(id):
         return redirect(url_for('admin.list_announcements'))
     return render_template('admin/edit_announcement.html', announcement=announcement)
 
-# Delete Announcement
 @admin_bp.route('/announcements/delete/<int:id>', methods=['POST'])
 @login_required
 def delete_announcement(id):
@@ -239,15 +257,12 @@ def delete_announcement(id):
 
 @admin_bp.route('/generate-report', methods=['POST'])
 def generate_report():
-    # Get report parameters from form
     report_type = request.form.get('report_type', 'full')
     start_date = request.form.get('start_date')
     end_date = request.form.get('end_date')
 
-    # Generate PDF
     pdf_buffer = generate_system_report(start_date, end_date)
     
-    # Send as downloadable file
     return send_file(
         pdf_buffer,
         mimetype='application/pdf',

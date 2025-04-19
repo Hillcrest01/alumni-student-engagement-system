@@ -19,8 +19,9 @@ class Config:
     MAIL_SERVER = 'smtp.gmail.com'
     MAIL_PORT = 587
     MAIL_USE_TLS = True
-    MAIL_USERNAME = os.getenv('MAIL_USERNAME')
-    MAIL_PASSWORD = os.getenv('MAIL_PASSWORD')
+    MAIL_USERNAME = 'peterochieng008@gmail.com'
+    MAIL_PASSWORD = os.getenv('GMAIL_APP_PASSWORD')
+    MAIL_DEFAULT_SENDER = ('Peter Ochieng', 'peterochieng008@gmail.com')
 
     # UPLOAD_FOLDER = os.path.join(os.getcwd(), 'static', 'uploads' , 'events')
     # os.makedirs(UPLOAD_FOLDER, exist_ok=True)  # Ensure the folder exists

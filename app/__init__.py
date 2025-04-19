@@ -1,6 +1,6 @@
 from flask import Flask, render_template
 from config import Config
-from .extensions import db, login_manager, migrate
+from .extensions import db, login_manager, migrate, mail
 from flask_wtf import CSRFProtect
 from flask_mail import Mail, Message
 from app.models import Announcement
@@ -23,8 +23,9 @@ def create_app(config_class=Config):
     login_manager.init_app(app)
     migrate.init_app(app, db)
 
-    #Initialize the flask mail here
-    mail = Mail(app)
+
+    mail.init_app(app)
+    # Initialize the Flask-Mail extension
     
     # Configure login manager
     login_manager.login_view = 'auth.login'

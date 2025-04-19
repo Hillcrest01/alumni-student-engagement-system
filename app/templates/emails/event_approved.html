@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<body>
+    <p>Dear {{ user.full_name }},</p>
+    <p>Your event <strong>{{ event.title }}</strong> has been approved and is now live on the Alumni Portal!</p>
+    <p>Event Details:
+        <ul>
+            <li>Date: {{ event.date_time.strftime('%B %d, %Y at %H:%M') }}</li>
+            <li>Location: {{ event.location or 'Online' }}</li>
+        </ul>
+    </p>
+    <p>Best regards,<br>Alumni Portal Team</p>
+</body>
+</html>
