@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<body>
+    <p>Hello {{ user.full_name }},</p>
+    <p>Your job posting for <strong>{{ job.title }}</strong> at {{ job.company }} has been approved and is now visible to all users.</p>
+    <p>Job Details:
+        <ul>
+            <li>Type: {{ job.job_type|title }}</li>
+            <li>Location: {{ job.location or 'Not specified' }}</li>
+        </ul>
+    </p>
+    <p>Best regards,<br>Alumni Portal Team</p>
+</body>
+</html>
