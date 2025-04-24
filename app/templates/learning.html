@@ -1,0 +1,185 @@
+{% extends "base.html" %}
+
+{% block title %}Resources{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="py-5 bg-light">
+    <div class="container py-4">
+        <div class="row justify-content-center text-center">
+            <div class="col-lg-8">
+                <h1 class="display-4 mb-3">Resources</h1>
+                <p class="lead mb-0">Welcome to the Our Resources Hub! 
+                This page is dedicated to equip you with the tools, knowledge, and guidance you need to excel in 
+                computer science fields—whether you're just getting started or already deep into your journey.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Breadcrumb -->
+<nav aria-label="breadcrumb" class="bg-white py-2">
+    <div class="container">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ url_for('main.index') }}">Home</a></li>
+            <li class="breadcrumb-item active">Resources</li>
+        </ol>
+    </div>
+</nav>
+
+<!-- Resources Section -->
+<section id="resources" class="py-5">
+    <div class="container">
+        <!-- Section Title -->
+        <div class="text-center mb-5" data-aos="fade-up">
+            <h2>Explore Your Learning Path</h2>
+            <p class="text-muted">Curated resources for your growth.</p>
+        </div>
+
+        <div class="row g-4">
+            <!-- Web Development Card -->
+            <div class="col-lg-4 col-md-6" data-aos="zoom-in" data-aos-delay="100">
+                <div class="card h-100 shadow-sm">
+                    <img src="{{ url_for('static', filename='index/graduation.jpg') }}" class="card-img-top" alt="Web Development">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <span class="badge bg-success">Web Development</span>
+                        </div>
+                        <p class="card-text">Build stunning websites and web apps. Start with HTML, CSS, JavaScript, then explore frameworks.</p>
+                        <div class="dropdown">
+                            <button class="btn btn-outline-success dropdown-toggle w-100" type="button" id="webDevDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                Resources
+                            </button>
+                            <ul class="dropdown-menu w-100" aria-labelledby="webDevDropdown">
+                                <li><a class="dropdown-item" href="https://roadmap.sh/frontend" target="_blank">Web Developer Roadmap</a></li>
+                                <li><a class="dropdown-item" href="https://www.freecodecamp.org/learn/" target="_blank">Web Development Curriculum</a></li>
+                                <li><a class="dropdown-item" href="https://developer.mozilla.org/en-US/" target="_blank">MDN Web Docs</a></li>
+                                <li><a class="dropdown-item" href="https://www.frontendmentor.io/challenges" target="_blank">Practice Projects</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Data Science Card -->
+            <div class="col-lg-4 col-md-6" data-aos="zoom-in" data-aos-delay="200">
+                <div class="card h-100 shadow-sm">
+                    <img src="{{ url_for('static', filename='index/alumgal1.jpeg') }}" class="card-img-top" alt="Data Science">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <span class="badge bg-success">Data Science</span>
+                        </div>
+                        <p class="card-text">Turn data into insights. Learn Excel, SQL, Python, and data visualization tools like Power BI.</p>
+                        <div class="dropdown">
+                            <button class="btn btn-outline-success dropdown-toggle w-100" type="button" id="dataScienceDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                Resources
+                            </button>
+                            <ul class="dropdown-menu w-100" aria-labelledby="dataScienceDropdown">
+                                <li><a class="dropdown-item" href="https://roadmap.sh/ai-data-scientist" target="_blank">AI & Data Science Roadmap</a></li>
+                                <li><a class="dropdown-item" href="https://www.kaggle.com/learn" target="_blank">Data Science Micro Courses</a></li>
+                                <li><a class="dropdown-item" href="https://pandas.pydata.org/docs/" target="_blank">Pandas Python Library Docs</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cybersecurity Card -->
+            <div class="col-lg-4 col-md-6" data-aos="zoom-in" data-aos-delay="300">
+                <div class="card h-100 shadow-sm">
+                    <img src="{{ url_for('static', filename='index/graduates.jpg') }}" class="card-img-top" alt="Cybersecurity">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <span class="badge bg-success">Cybersecurity</span>
+                        </div>
+                        <p class="card-text">Protect systems from threats. Understand networks, ethical hacking, and risk management fundamentals.</p>
+                        <div class="dropdown">
+                            <button class="btn btn-outline-success dropdown-toggle w-100" type="button" id="cyberSecurityDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                Resources
+                            </button>
+                            <ul class="dropdown-menu w-100" aria-labelledby="cyberSecurityDropdown">
+                                <li><a class="dropdown-item" href="https://roadmap.sh/cyber-security" target="_blank">Cybersecurity Roadmap</a></li>
+                                <li><a class="dropdown-item" href="https://www.cybrary.it/course/intro-to-it-and-cybersecurity/" target="_blank">Cybrary's Intro to IT & Cybersecurity</a></li>
+                                <li><a class="dropdown-item" href="https://www.kali.org/docs/" target="_blank">Kali Linux Documentation</a></li>
+                                <li><a class="dropdown-item" href="https://www.hackthebox.com/" target="_blank">Practice Projects</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AI/ML Card -->
+            <div class="col-lg-4 col-md-6" data-aos="zoom-in" data-aos-delay="100">
+                <div class="card h-100 shadow-sm">
+                    <img src="{{ url_for('static', filename='index/comp lab.jpg') }}" class="card-img-top" alt="AI/ML">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <span class="badge bg-success">AI & Machine Learning</span>
+                        </div>
+                        <p class="card-text">Create intelligent systems that learn and adapt. Build models that mimic human thinking and decision-making.</p>
+                        <div class="dropdown">
+                            <button class="btn btn-outline-success dropdown-toggle w-100" type="button" id="aiMlDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                Resources
+                            </button>
+                            <ul class="dropdown-menu w-100" aria-labelledby="aiMlDropdown">
+                                <li><a class="dropdown-item" href="https://github.com/mrdbourke/machine-learning-roadmap" target="_blank">ML Roadmap by Daniel Bourke</a></li>
+                                <li><a class="dropdown-item" href="https://www.freecodecamp.org/learn/" target="_blank">AI's Deep Learning Specialization</a></li>
+                                <li><a class="dropdown-item" href="https://developers.google.com/machine-learning/crash-course" target="_blank">Google's Machine Learning Crash Course</a></li>
+                                <li><a class="dropdown-item" href="https://course.fast.ai/" target="_blank">Practical Deep Learning</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mobile Development Card -->
+            <div class="col-lg-4 col-md-6" data-aos="zoom-in" data-aos-delay="200">
+                <div class="card h-100 shadow-sm">
+                    <img src="{{ url_for('static', filename='index/alumgal3.jpeg') }}" class="card-img-top" alt="Mobile Development">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <span class="badge bg-success">Mobile Development</span>
+                        </div>
+                        <p class="card-text">Build the apps that shape everyday life. Design and develop intuitive apps for Android and iOS using modern frameworks.</p>
+                        <div class="dropdown">
+                            <button class="btn btn-outline-success dropdown-toggle w-100" type="button" id="mobileDevDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                Resources
+                            </button>
+                            <ul class="dropdown-menu w-100" aria-labelledby="mobileDevDropdown">
+                                <li><a class="dropdown-item" href="https://roadmap.sh/android" target="_blank">Android Developer Roadmap</a></li>
+                                <li><a class="dropdown-item" href="https://developer.android.com/docs" target="_blank">Android Developers Documentation</a></li>
+                                <li><a class="dropdown-item" href="https://www.codecademy.com/learn/learn-swiftui" target="_blank">Codecademy with SwiftUI</a></li>
+                                <li><a class="dropdown-item" href="https://www.raywenderlich.com/ios/paths" target="_blank">Ray Wenderlich iOS Tutorials</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cloud Computing Card -->
+            <div class="col-lg-4 col-md-6" data-aos="zoom-in" data-aos-delay="300">
+                <div class="card h-100 shadow-sm">
+                    <img src="{{ url_for('static', filename='index/alumgal2.jpeg') }}" class="card-img-top" alt="Cloud Computing">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <span class="badge bg-success">Cloud Computing</span>
+                        </div>
+                        <p class="card-text">Deliver scalable services and infrastructure over the internet with platforms like AWS, Azure, and GCP.</p>
+                        <div class="dropdown">
+                            <button class="btn btn-outline-success dropdown-toggle w-100" type="button" id="cloudDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                Resources
+                            </button>
+                            <ul class="dropdown-menu w-100" aria-labelledby="cloudDropdown">
+                                <li><a class="dropdown-item" href="https://roadmap.sh/aws" target="_blank">AWS Cloud Roadmap</a></li>
+                                <li><a class="dropdown-item" href="https://cloudacademy.com/learning-paths/cloud-computing-fundamentals-237/" target="_blank">Cloud Computing Fundamentals</a></li>
+                                <li><a class="dropdown-item" href="https://learn.microsoft.com/en-us/training/paths/azure-fundamentals/" target="_blank">Microsoft Learn - Azure Fundamentals</a></li>
+                                <li><a class="dropdown-item" href="https://cloud.google.com/training" target="_blank">Google Cloud Training & Certification</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
