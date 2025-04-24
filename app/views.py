@@ -38,6 +38,9 @@ def view_matches():
 def about():
     return render_template('about.html')
 
+@views_bp.route('/learning' , methods=['GET', 'POST'])
+def learning():
+    return render_template('learning.html')
 
 @views_bp.route('/contact', methods=['GET', 'POST'])
 def contact():

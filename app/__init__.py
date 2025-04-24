@@ -39,18 +39,20 @@ def create_app(config_class=Config):
     @app.after_request
     def apply_security_headers(response):
 
-        csp_policy = (
-        "default-src 'self'; "
-        "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://fonts.googleapis.com; "
-        "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; "
-        "font-src 'self' data: https://cdn.jsdelivr.net https://fonts.googleapis.com; "
-        "img-src 'self' data:; "
-        "connect-src 'self';"
-        )
+    #     csp_policy = (
+    #      "default-src 'self'; "
+    # "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://fonts.googleapis.com; "
+    # "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://embed.tawk.to https://va.tawk.to; "
+    # "font-src 'self' data: https://cdn.jsdelivr.net https://fonts.gstatic.com https://fonts.googleapis.com; "
+    # "img-src 'self' data: https:; "
+    # "connect-src 'self' https://embed.tawk.to https://va.tawk.to; "
+    # "frame-src https://embed.tawk.to; "
+    # "worker-src 'self' blob:; "
+    # "media-src 'self' data:; ")
 
-        response.headers['Content-Security-Policy'] = csp_policy
-        response.headers['X-Content-Type-Options'] = 'nosniff'
-        response.headers['X-Frame-Options'] = 'DENY'
+    #     response.headers['Content-Security-Policy'] = csp_policy
+    #     response.headers['X-Content-Type-Options'] = 'nosniff'
+    #     response.headers['X-Frame-Options'] = 'DENY'
         return response
 
 

@@ -2,56 +2,67 @@
 {% block content %}
 <!-- Hero Section -->
 {% with latest_announcement = get_latest_announcement() %} {% if
-latest_announcement %}
-<div
-  id="announcement-banner"
-  style="
-    background: #CFF4FC;
-    color: #212121;
-    padding: 12px 20px;
-    position: relative;
-    max-width: 800px;
-    margin: 0 auto 20px;
-    border-radius: 6px;
-    box-shadow: 0 2px 8px rgba(22, 31, 55, 0.15);
-    width: 90%;
-  "
->
+  latest_announcement %}
   <div
-    style="display: flex; align-items: center; justify-content: space-between"
+    id="announcement-banner"
+    style="
+      background: #CFF4FC;
+      color: #212121;
+      padding: 12px 20px;
+      position: relative;
+      max-width: 800px;
+      margin: 0 auto 20px;
+      border-radius: 6px;
+      box-shadow: 0 2px 8px rgba(22, 31, 55, 0.15);
+      width: 90%;
+      display: none;
+    "
   >
-    <div style="padding-right: 30px">
-      <strong style="color: #157347; font-size: 1.1rem"
-        >{{ latest_announcement.title }}</strong
-      >
-      <span style="margin-left: 10px; font-size: 0.95rem"
-        >{{ latest_announcement.content }}</span
-      >
-    </div>
-    <button
-      onclick="document.getElementById('announcement-banner').style.display='none'"
-      style="
-        background: transparent;
-        border: none;
-        color: #157347;
-        cursor: pointer;
-        padding: 4px 8px;
-        border-radius: 50%;
-        transition: all 0.2s ease;
-      "
-      onmouseover="this.style.backgroundColor='rgba(21, 115, 71, 0.1)'"
-      onmouseout="this.style.backgroundColor='transparent'"
+    <div
+      style="display: flex; align-items: center; justify-content: space-between"
     >
-      <i class="bi bi-x" style="font-size: 1.2rem"></i>
-    </button>
+      <div style="padding-right: 30px">
+        <strong style="color: #157347; font-size: 1.1rem"
+          >{{ latest_announcement.title }}</strong
+        >
+        <span style="margin-left: 10px; font-size: 0.95rem"
+          >{{ latest_announcement.content }}</span
+        >
+      </div>
+      <button
+        onclick="closeAnnouncement()"
+        style="
+          background: transparent;
+          border: none;
+          color: #157347;
+          cursor: pointer;
+          padding: 4px 8px;
+          border-radius: 50%;
+          transition: all 0.2s ease;
+        "
+        onmouseover="this.style.backgroundColor='rgba(21, 115, 71, 0.1)'"
+        onmouseout="this.style.backgroundColor='transparent'"
+      >
+        <i class="bi bi-x" style="font-size: 1.2rem"></i>
+      </button>
+    </div>
   </div>
-</div>
-<script>
-  setTimeout(function () {
-    document.getElementById("announcement-banner").style.display = "none";
-  }, 5000); // hide after 5 seconds
-</script>
-{% endif %} {% endwith %}
+  <script>
+    // Check if announcement has been shown before
+    if (!localStorage.getItem('announcementShown')) {
+      document.getElementById('announcement-banner').style.display = 'block';
+      localStorage.setItem('announcementShown', 'true');
+      
+      setTimeout(function() {
+        document.getElementById('announcement-banner').style.display = 'none';
+      }, 5000); // hide after 5 seconds
+    }
+  
+    function closeAnnouncement() {
+      document.getElementById('announcement-banner').style.display = 'none';
+    }
+  </script>
+  {% endif %} {% endwith %}
 <section class="py-4">
   <div class="container">
     <div class="row align-items-center g-4">
@@ -240,7 +251,7 @@ latest_announcement %}
             style="width: 40px"
           />
           <div>
-            <h3 class="mb-0 fw-bold">{{ alumni }}+</h3>
+            <h3 class="mb-0 fw-bold">{{ alumni or 0 }}+</h3>
             <small>Alumni</small>
           </div>
         </div>
