@@ -66,8 +66,7 @@ def create_job():
 @jobs_bp.route('/')
 def job_list():
     jobs = Job.query.filter_by(is_verified=True).order_by(Job.created_at.desc()).all()
-    converted_jobs = [convert_job_for_display(job) for job in jobs]
-    return render_template('jobs/list.html', jobs=converted_jobs)
+    return render_template('jobs/list.html', jobs=jobs , latest_jobs = jobs[:3])
 
 #gives the details of a single job i.e. Jod Details Page
 @jobs_bp.route('/<int:job_id>')

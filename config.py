@@ -22,6 +22,9 @@ class Config:
     MAIL_USERNAME = 'peterochieng008@gmail.com'
     MAIL_PASSWORD = os.getenv('GMAIL_APP_PASSWORD')
     MAIL_DEFAULT_SENDER = ('Peter Ochieng', 'peterochieng008@gmail.com')
+    MAIL_SUPPRESS_SEND = False  # Set to True to suppress email sending in test mode
+
+    RESET_TOKEN_EXPIRATION = 3600 
 
     # UPLOAD_FOLDER = os.path.join(os.getcwd(), 'static', 'uploads' , 'events')
     # os.makedirs(UPLOAD_FOLDER, exist_ok=True)  # Ensure the folder exists

@@ -43,6 +43,22 @@
         color: #0d4d32;
         text-decoration: underline;
     }
+    /* New styles for password toggle */
+    .password-toggle-group {
+        position: relative;
+    }
+    .password-toggle {
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+        color: #6c757d;
+        z-index: 5;
+    }
+    .password-toggle:hover {
+        color: #157347;
+    }
 </style>
 
 <div class="container py-5">
@@ -64,9 +80,14 @@
                             {% endfor %}
                         </div>
 
-                        <div class="mb-4">
+                        <div class="mb-4 password-toggle-group">
                             {{ form.password.label(class="form-label") }}
-                            {{ form.password(class="form-control") }}
+                            <div class="position-relative">
+                                {{ form.password(class="form-control") }}
+                                <span class="password-toggle" id="togglePassword">
+                                    <i class="bi bi-eye-slash"></i>
+                                </span>
+                            </div>
                             {% for error in form.password.errors %}
                                 <div class="invalid-feedback d-block">{{ error }}</div>
                             {% endfor %}
@@ -79,7 +100,7 @@
                         </div>
 
                         <div class="text-center mt-3 auth-links">
-                            <a href="{{ url_for('auth.change_password') }}">Forgot Password?</a>
+                            <a href="{{ url_for('auth.forgot_password') }}">Forgot Password?</a>
                         </div>
                     </form>
 
@@ -94,4 +115,21 @@
         </div>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const togglePassword = document.querySelector('#togglePassword');
+    const passwordInput = document.querySelector('input[name="password"]');
+    
+    togglePassword.addEventListener('click', function() {
+        // Toggle the type attribute
+        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordInput.setAttribute('type', type);
+        
+        // Toggle the eye icon
+        this.querySelector('i').classList.toggle('bi-eye');
+        this.querySelector('i').classList.toggle('bi-eye-slash');
+    });
+});
+</script>
 {% endblock %}

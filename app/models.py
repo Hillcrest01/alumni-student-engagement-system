@@ -33,6 +33,7 @@ class User(UserMixin, db.Model):
     graduation_year = db.Column(db.Integer)       # For students
     availability = db.Column(db.String(20), default='away')
     last_active = db.Column(db.DateTime)
+    password_changed = db.Column(db.Boolean, default=False, nullable=False)
     
     def set_password(self, password):
         """Security-focused password hashing"""
@@ -41,6 +42,10 @@ class User(UserMixin, db.Model):
             method='pbkdf2:sha512',
             salt_length=16
         )
+
+    def set_password(self, password):
+        self.password_hash = generate_password_hash(password)
+        self.password_changed = True
 
     def check_password(self, password):
         """Verify password against stored hash"""

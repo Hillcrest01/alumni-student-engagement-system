@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, TextAreaField, IntegerField, SelectMultipleField, SelectField, BooleanField, DateTimeField
+from wtforms import StringField, PasswordField, SubmitField, TextAreaField, IntegerField, SelectMultipleField, SelectField, BooleanField, DateTimeField, validators
 from wtforms.validators import DataRequired, Email, Length, EqualTo, Optional, URL
 class LoginForm(FlaskForm):
     email = StringField('Email', validators=[
@@ -104,3 +104,20 @@ class VerificationForm(FlaskForm):
         Email()
     ])
     submit = SubmitField('Request Verification')
+
+
+class ForgotPasswordForm(FlaskForm):
+    email = StringField('Email', validators=[
+        validators.InputRequired(),
+        validators.Email(),
+        validators.Length(max=120)
+    ])
+
+class ResetPasswordForm(FlaskForm):
+    password = PasswordField('New Password', validators=[
+        validators.InputRequired(),
+        validators.Length(min=8, message='Password must be at least 8 characters')
+    ])
+    confirm_password = PasswordField('Confirm New Password', validators=[
+        validators.EqualTo('password', message='Passwords must match')
+    ])

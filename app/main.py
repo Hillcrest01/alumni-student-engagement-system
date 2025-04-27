@@ -37,38 +37,31 @@ def convert_job_for_display(job):
         
     }
 
-@main_bp.route('/', methods=['GET', 'POST'])
+@main_bp.route('/')
 def index():
     now = datetime.utcnow()
     
-    # Get counts
-    students_count = User.query.filter_by(role='student').count()
-    alumni_count = User.query.filter_by(role='alumni').count()
-    events_count = Event.query.count()
-    jobs_count = Job.query.count()
+    # Statistics
+    stats = {
+        'students_count': User.query.filter_by(role='student').count(),
+        'alumni_count': User.query.filter_by(role='alumni').count(),
+        'events_count': Event.query.count(),
+        'jobs_count': Job.query.filter_by(is_verified=True).count()
+    }
 
-    print(f"Students: {students_count}, Alumni: {alumni_count}, Events: {events_count}, Jobs: {jobs_count}")
-
-    # Get latest jobs (consider adding limits/ordering)
-    latest_jobs = Job.query.order_by(Job.created_at.desc()).limit(3).all()
-    
-    # Get upcoming events
+    # Upcoming Events (moved from auth route)
     upcoming_events = Event.query.filter(
         Event.date_time > now,
         Event.is_verified == True
-    ).order_by(Event.date_time.asc()).limit(3).all()
-    
-    # Convert models for display
-    converted_upcoming = [convert_event_for_display(e) for e in upcoming_events]
-    converted_jobs = [convert_job_for_display(job) for job in latest_jobs]
+    ).order_by(Event.date_time.asc()).limit(5).all()
+    converted_events = [convert_event_for_display(e) for e in upcoming_events]
+
+    # Latest Jobs
+    jobs = Job.query.filter_by(is_verified=True).order_by(Job.created_at.desc()).limit(3).all()
 
     return render_template(
         'index.html',
-        upcoming_events=converted_upcoming,
-        latest_jobs=converted_jobs,
-        current_time=now,
-        students=students_count,
-        alumni=alumni_count,
-        events_count=events_count,
-        jobs_count=jobs_count
+        stats=stats,
+        upcoming_events=converted_events,
+        jobs=jobs
     )
