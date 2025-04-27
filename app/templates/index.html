@@ -237,7 +237,7 @@
             style="width: 40px"
           />
           <div>
-            <h3 class="mb-0 fw-bold">{{ students or 0}}+</h3>
+            <h3 class="mb-0 fw-bold">{{ stats.students_count}}+</h3>
             <small>Students</small>
           </div>
         </div>
@@ -251,7 +251,7 @@
             style="width: 40px"
           />
           <div>
-            <h3 class="mb-0 fw-bold">{{ alumni or 0 }}+</h3>
+            <h3 class="mb-0 fw-bold">{{ stats.alumni_count }}+</h3>
             <small>Alumni</small>
           </div>
         </div>
@@ -265,7 +265,7 @@
             style="width: 40px"
           />
           <div>
-            <h3 class="mb-0 fw-bold">{{ events_count }}+</h3>
+            <h3 class="mb-0 fw-bold">{{ stats.events_count }}+</h3>
             <small>Events</small>
           </div>
         </div>
@@ -279,7 +279,7 @@
             style="width: 40px"
           />
           <div>
-            <h3 class="mb-0 fw-bold">{{ jobs_count }}+</h3>
+            <h3 class="mb-0 fw-bold">{{ stats.jobs_count }}+</h3>
             <small>Jobs</small>
           </div>
         </div>
@@ -295,10 +295,10 @@
       Recent Opportunities
     </h2>
 
-    {% if latest_jobs %}
+    {% if jobs %}
     <div class="row g-3">
-      {% for job in latest_jobs[:4] %}
-      <div class="col-md-6 col-lg-3">
+      {% for job in jobs[:4] %}
+      <div class="col-md-4">
         <div class="card h-100 shadow-sm">
           {% if job.image %}
           <img
@@ -320,7 +320,11 @@
             <h6 class="card-subtitle mb-2 text-muted small">
               {{ job.company }}
             </h6>
-            <div class="badge bg-success mb-2">{{ job.job_type }}</div>
+            <div class="badge rounded-pill px-3 py-2 mb-2" 
+                             style="background-color: {% if job.job_type == 'internship' %}#FFD700{% else %}#161F37{% endif %}; 
+                                    color: {% if job.job_type == 'internship' %}#161F37{% else %}white{% endif %};">
+                            {{ "Internship" if job.job_type == "internship" else "Full-time" }}
+                        </div>
             <p class="card-text small">{{ job.description|truncate(80) }}</p>
             <div class="d-flex align-items-center gap-1 small text-muted">
               <i class="bi bi-geo-alt"></i>
@@ -457,28 +461,17 @@
 <section class="py-4 text-white" style="background-color: #cccfd1">
   <div class="container">
     <div class="text-center" style="color: #212121">
-      <h3 class="mb-3">Stay Updated With Alumni News</h3>
+      <h3 class="mb-3">Are you new to Computer Science?</h3>
       <p class="mb-4">
-        Join Our Newsletter Today to keep on receiving the updates
+        Visit the Learning page to find resources and materials that will start you off
       </p>
-      <div class="row justify-content-center">
-        <div class="col-md-8 col-lg-6">
-          <form class="input-group">
-            <input
-              type="email"
-              class="form-control"
-              placeholder="Enter your email address"
-              required
-            />
-            <button
-              class="btn btn-light"
-              type="submit"
-              style="background-color: #161f37; color: white"
-            >
-              Subscribe
-            </button>
-          </form>
-        </div>
+      <div class="text-center mt-4">
+        <a
+          href="{{ url_for('views.learning') }}"
+          class="btn btn-success px-4 py-2"
+        >
+          Start Learning
+        </a>
       </div>
     </div>
   </div>

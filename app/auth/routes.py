@@ -3,35 +3,15 @@ from flask_login import login_user, logout_user, current_user, login_required
 from app.extensions import db
 from app.models import User, Interest, Event, VerificationRequest
 from app.utils import utc_to_eat
-from app.forms import LoginForm, ChangePasswordForm, CompleteProfileForm, VerificationForm
-from datetime import datetime
+from app.forms import LoginForm, ChangePasswordForm, CompleteProfileForm, VerificationForm, ForgotPasswordForm, ResetPasswordForm
+from datetime import datetime, timedelta
+from itsdangerous import URLSafeTimedSerializer
+from app.emails import send_email
+from flask import current_app
 
 auth_bp = Blueprint('auth', __name__)
 
-@auth_bp.route('/')
-def index():
-    # Get first 5 upcoming verified events
-    now = datetime.utcnow()
-    upcoming_events = Event.query.filter(
-        Event.date_time > now,
-        Event.is_verified == True
-    ).order_by(Event.date_time.asc()).limit(5).all()
-
-    # Convert events for display
-    converted_events = []
-    for event in upcoming_events:
-        converted = {
-            'id': event.id,
-            'title': event.title,
-            'description': event.description,
-            'eat_datetime': utc_to_eat(event.date_time).strftime('%Y-%m-%d %H:%M'),
-            'location': event.location,
-            'image': event.image,
-            'creator_id': event.creator_id
-        }
-        converted_events.append(converted)
-
-    return render_template('index.html', upcoming_events=converted_events)
+RESET_TOKEN_EXPIRATION = 3600
 
 @auth_bp.route('/login', methods=['GET', 'POST'])
 def login():
@@ -94,6 +74,61 @@ def change_password():
         return redirect(url_for('auth.profile'))
     
     return render_template('auth/change_password.html', form=form)
+
+
+@auth_bp.route('/forgot-password', methods=['GET', 'POST'])
+def forgot_password():
+    form = ForgotPasswordForm()
+    
+    if form.validate_on_submit():
+        user = User.query.filter_by(email=form.email.data).first()
+        
+        if user:
+            # Generate password reset token
+            serializer = URLSafeTimedSerializer(current_app.config['SECRET_KEY'])
+            token = serializer.dumps(user.email, salt='password-reset-salt')
+            
+            # Send password reset email
+            reset_url = url_for('auth.reset_password', token=token, _external=True)
+            send_email(
+                to=user.email,
+                subject="Password Reset Instructions",
+                template="password_reset_email.html",
+                reset_url=reset_url,
+                expiration_hours=RESET_TOKEN_EXPIRATION//3600
+            )
+        
+        # Always show success to prevent email enumeration
+        flash('If an account exists with that email, you will receive password reset instructions shortly.', 'info')
+        return redirect(url_for('auth.login'))
+    
+    return render_template('auth/forgot_password.html', form=form)
+
+@auth_bp.route('/reset-password/<token>', methods=['GET', 'POST'])
+def reset_password(token):
+    try:
+        serializer = URLSafeTimedSerializer(current_app.config['SECRET_KEY'])
+        email = serializer.loads(
+            token,
+            salt='password-reset-salt',
+            max_age=RESET_TOKEN_EXPIRATION
+        )
+    except:
+        flash('The password reset link is invalid or has expired.', 'danger')
+        return redirect(url_for('auth.forgot_password'))
+    
+    user = User.query.filter_by(email=email).first_or_404()
+    form = ResetPasswordForm()
+    
+    if form.validate_on_submit():
+        user.set_password(form.password.data)
+        user.password_changed = True
+        db.session.commit()
+        
+        flash('Your password has been updated! Please log in with your new password.', 'success')
+        return redirect(url_for('auth.login'))
+    
+    return render_template('auth/reset_password.html', form=form, token=token)
 
 @auth_bp.route('/profile')
 @login_required

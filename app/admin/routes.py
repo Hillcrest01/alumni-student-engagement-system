@@ -83,6 +83,15 @@ def add_user():
         
         db.session.add(user)
         db.session.commit()
+
+        #send the user details
+        send_email(
+            to=user.email,
+            subject="Your Account has been Approved",
+            template="new_user_account.html",
+            user=user,
+            temp_password=temp_password
+        )
         
         flash(f'User added! Temporary password: {temp_password}', 'success')
         return redirect(url_for('admin.manage_users'))
@@ -159,7 +168,7 @@ def approve_job(job_id):
     send_email(
         to=job.creator.email,
         subject=f"Job Approved: {job.title}",
-        template="emails/job_approved.html",
+        template="job_approved.html",
         user=job.creator,
         job=job
     )
