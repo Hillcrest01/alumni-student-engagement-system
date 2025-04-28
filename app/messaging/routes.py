@@ -1,4 +1,13 @@
 from flask import Blueprint, render_template, redirect, url_for, request, flash
+"""
+This module defines the messaging routes for a Flask application. It includes functionalities for sending messages, 
+viewing conversations, and displaying the inbox with unread message counts. The routes are protected with login 
+requirements to ensure only authenticated users can access them.
+Modules:
+- send_message: Handles sending messages to a specific recipient.
+- view_conversation: Displays the conversation history between the current user and a specific recipient.
+- inbox: Displays a list of conversations with the latest message timestamp and unread message counts.
+"""
 from flask_login import login_required, current_user
 from app import db
 from app.models import Message, User

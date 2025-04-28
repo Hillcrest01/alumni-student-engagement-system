@@ -4,6 +4,17 @@
 <div class="container mt-4">
     <div class="row justify-content-center">
         <div class="col-lg-8">
+
+            <nav aria-label="breadcrumb" class="bg-white py-2">
+                <div class="container">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{{ url_for('admin.dashboard') }}">Dashboard</a></li>
+                        <li class="breadcrumb-item"><a href="{{ url_for('admin.list_announcements') }}">Announcements</a></li>
+                        <li class="breadcrumb-item active">Edit</li>
+                    </ol>
+                </div>
+            </nav>
+
             <div class="card shadow border-0">
                 <div class="card-header bg-dark-blue text-white">
                     <h3 class="mb-0">Edit Announcement</h3>

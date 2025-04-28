@@ -1,4 +1,23 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, current_app, abort
+"""
+This module defines the routes for managing events in the Alumni-Student Engagement System.
+It includes functionalities for creating, listing, viewing, updating, and deleting events.
+Modules:
+- `convert_event_for_display`: Converts an event object into a display-friendly format with EAT timestamps.
+- `create_event`: Handles the creation of a new event, including image upload and form validation.
+- `event_list`: Displays a list of upcoming and past events, separated by their date and time.
+- `event_detail`: Displays detailed information about a specific event.
+- `delete_event`: Allows authorized users to delete an event.
+- `update_event`: Allows authorized users to update an event, including handling image updates.
+Blueprint:
+- `events_bp`: A Flask Blueprint for grouping all event-related routes.
+Dependencies:
+- Flask modules for routing, rendering templates, and handling requests.
+- Flask-Login for user authentication and authorization.
+- SQLAlchemy for database interactions.
+- Werkzeug for secure file handling.
+- Utility functions for timezone conversion.
+"""
 from flask_login import login_required, current_user
 from app import db
 from app.models import Event

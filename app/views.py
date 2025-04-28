@@ -5,9 +5,14 @@ from datetime import datetime
 from app.utils import utc_to_eat
 from app import db
 from app.forms import ContactForm, ContactFormLoggedIn
+from app.emails import send_email
+from flask import current_app
 
 views_bp = Blueprint('views', __name__)
 
+
+
+#this is the code that matches the students to the alumni.
 @views_bp.route('/matches')
 @login_required
 def view_matches():
@@ -34,14 +39,26 @@ def view_matches():
     return render_template('matches.html', matches=matches)
 
 
+
+#this is for the about page
 @views_bp.route('/about', methods=['GET', 'POST'])
 def about():
     return render_template('about.html')
 
+
+#this is for the learning page
 @views_bp.route('/learning' , methods=['GET', 'POST'])
 def learning():
     return render_template('learning.html')
 
+
+#this is for the frequently asked questions
+@views_bp.route('/faqs', methods=['GET', 'POST'])
+def faqs():
+    return render_template('faqs.html')
+
+
+#this is for contact messages. It allows the users to send messages directly to the administrator.
 @views_bp.route('/contact', methods=['GET', 'POST'])
 def contact():
     if current_user.is_authenticated:
@@ -71,6 +88,8 @@ def contact():
 
     return render_template('contact.html', form=form)
 
+
+#this allows the admin to access the messages sent by the users
 @views_bp.route('/admin/contact-messages')
 @login_required
 def contact_messages():
@@ -81,6 +100,8 @@ def contact_messages():
     messages = ContactMessage.query.order_by(ContactMessage.created_at.desc()).all()
     return render_template('admin/contact_messages.html', messages=messages)
 
+
+#this allows admin to reply to the messages.
 @views_bp.route('/admin/contact-messages/<int:message_id>/reply', methods=['POST'])
 @login_required
 def reply_to_message(message_id):
@@ -96,9 +117,21 @@ def reply_to_message(message_id):
         message.is_responded = True
         message.is_read = True
         db.session.commit()
+
+        #here, the response is sent to the user via email
+        try:
+            send_email(
+                to=message.email,
+                subject=f"Re: Your Contact Message",
+                template="contact_response.html",
+                original_message=message.message,
+                response=response,
+                contact_email=current_app.config['MAIL_DEFAULT_SENDER']  # Your support email
+            )
+        except Exception as e:
+            current_app.logger.error(f"Failed to send email response: {str(e)}")
+            flash('Response saved but failed to send email', 'warning')
         
-        # Here you would add code to actually send the email response
-        # using Flask-Mail or another email service
         
         flash('Response sent successfully!', 'success')
     else:
@@ -106,6 +139,7 @@ def reply_to_message(message_id):
     
     return redirect(url_for('views.contact_messages'))
 
+#this allows the users to view all the announcements in the system.
 @views_bp.route('/announcements')
 @login_required
 def user_announcements():

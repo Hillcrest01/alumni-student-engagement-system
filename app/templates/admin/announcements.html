@@ -10,6 +10,16 @@
         </a>
     </div>
 
+    <nav aria-label="breadcrumb" class="bg-white py-2">
+        <div class="container">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ url_for('admin.dashboard') }}">Dashboard</a></li>
+                <li class="breadcrumb-item active">Announcements</li>
+            </ol>
+        </div>
+    </nav>
+    
+    
     <div class="row justify-content-center">
         <div class="col-lg-8">
             {% for announcement in announcements %}
