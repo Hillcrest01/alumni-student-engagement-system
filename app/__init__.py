@@ -1,3 +1,28 @@
+
+"""
+This module initializes and configures the Flask application for the Alumni-Student Engagement System.
+Modules and their purposes:
+- Flask and Extensions:
+    - Initializes the Flask application and configures it using the provided configuration class.
+    - Sets up CSRF protection for security.
+    - Initializes Flask extensions such as SQLAlchemy (db), Flask-Login (login_manager), Flask-Migrate (migrate), and Flask-Mail (mail).
+- Context Processor:
+    - Provides a context processor to inject the latest announcement into templates for dynamic rendering.
+- Login Manager:
+    - Configures the login manager to handle user authentication.
+    - Defines a user loader function to retrieve user information from the database.
+- Security Headers:
+    - (Commented out) Adds security headers such as Content Security Policy (CSP), X-Content-Type-Options, and X-Frame-Options to enhance application security.
+- Blueprints:
+    - Imports and registers blueprints for modularizing the application.
+    - Blueprints include authentication, admin, views, messaging, events, jobs, and main routes.
+- CLI Commands:
+    - Registers custom CLI commands for managing the application.
+- Error Handlers:
+    - Defines an error handler for HTTP 403 (Forbidden) errors to render a custom error page.
+Returns:
+        Flask app instance: The configured Flask application instance.
+"""
 from flask import Flask, render_template
 from config import Config
 from .extensions import db, login_manager, migrate, mail

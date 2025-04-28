@@ -1,4 +1,37 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, request, abort
+"""
+This module defines the routes for the authentication blueprint (`auth_bp`) in a Flask application.
+It includes functionalities for user authentication, profile management, password management, and 
+verification requests. Below is an overview of the routes and their purposes:
+1. `/login`:
+    - Handles user login functionality.
+    - Validates user credentials, checks account verification, and manages login sessions.
+2. `/logout`:
+    - Logs out the currently authenticated user and redirects to the main page.
+3. `/change-password`:
+    - Allows authenticated users to change their password.
+    - Validates the current password and updates the new password in the database.
+4. `/forgot-password`:
+    - Provides a form for users to request a password reset.
+    - Sends a password reset email with a secure token if the email exists in the system.
+5. `/reset-password/<token>`:
+    - Handles password reset functionality using a secure token.
+    - Validates the token, allows users to set a new password, and updates the database.
+6. `/profile`:
+    - Displays the profile page of the currently authenticated user.
+7. `/complete-profile`:
+    - Allows authenticated users to complete or update their profile information.
+    - Handles both alumni and student-specific fields and updates the database.
+8. `/update-availability`:
+    - Allows alumni users to update their availability status (e.g., available or away).
+    - Ensures only alumni can access this route and updates the user's availability status.
+9. `/request-verification`:
+    - Provides a form for users to request account verification.
+    - Prevents duplicate requests and stores the verification request in the database.
+This module relies on Flask extensions such as `flask_login` for session management, 
+`flask_sqlalchemy` for database interactions, and `itsdangerous` for secure token generation.
+It also uses custom forms, models, and utility functions defined in the application.
+"""
 from flask_login import login_user, logout_user, current_user, login_required
 from app.extensions import db
 from app.models import User, Interest, Event, VerificationRequest

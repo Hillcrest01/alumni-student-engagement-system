@@ -9,9 +9,11 @@ user_interest = db.Table('user_interest',
     db.Column('interest_id', db.Integer, db.ForeignKey('interest.id'), primary_key=True)
 )
 
+
+#table for users
 class User(UserMixin, db.Model):
     """User model with authentication fields"""
-    __tablename__ = 'user'  # table name
+    __tablename__ = 'user'  
     
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(120), unique=True, nullable=False)

@@ -1,4 +1,15 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, current_app, abort
+"""
+This module defines the routes for managing job postings in a Flask application. 
+It includes functionality for creating, listing, viewing, updating, and deleting job postings.
+Modules:
+- `convert_job_for_display`: Helper function to convert a Job object into a dictionary for display purposes.
+- `create_job`: Route for creating a new job posting. Handles form submission, image upload, and database insertion.
+- `job_list`: Route for displaying a list of verified job postings, including the latest jobs.
+- `job_detail`: Route for displaying the details of a specific job posting.
+- `delete_job`: Route for deleting a job posting. Only accessible to admins or the job creator.
+- `update_job`: Route for updating an existing job posting. Handles form submission, image updates, and database modifications.
+"""
 from flask_login import login_required, current_user
 from app import db
 from app.models import Job

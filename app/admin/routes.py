@@ -1,4 +1,28 @@
 from io import BytesIO
+"""
+This module defines the routes and functionalities for the admin section of the Alumni-Student Engagement System.
+It includes features for managing users, events, jobs, verification requests, announcements, and generating reports.
+Modules:
+- `check_admin`: Restricts access to admin users only.
+- `dashboard`: Displays the admin dashboard with system statistics and pending items.
+- `manage_users`: Lists all users for management purposes.
+- `add_user`: Allows the admin to add a new user with a temporary password.
+- `edit_user`: Enables editing of user details by the admin.
+- `delete_user`: Allows the admin to delete a user, with a restriction on deleting their own account.
+- `verify_event`: Approves an event and notifies the creator via email.
+- `delete_event`: Deletes an event from the system.
+- `verify_events`: Lists all pending events for verification.
+- `approve_job`: Approves a job post and notifies the creator via email.
+- `delete_job`: Deletes a job post and notifies the creator via email.
+- `list_jobs_pending`: Lists all pending job posts for verification.
+- `verification_requests`: Displays all verification requests and their statuses.
+- `handle_verification`: Handles approval or rejection of a verification request and notifies the user.
+- `list_announcements`: Lists all announcements in the system.
+- `create_announcement`: Allows the admin to create a new announcement.
+- `edit_announcement`: Enables editing of an existing announcement.
+- `delete_announcement`: Deletes an announcement from the system.
+- `generate_report`: Generates a system report as a downloadable PDF file.
+"""
 from flask import Blueprint, render_template, redirect, url_for, flash, abort, request, send_file
 from flask_login import login_required, current_user
 from app import db
@@ -11,6 +35,8 @@ from app.emails import send_email  # Email integration
 
 admin_bp = Blueprint('admin', __name__, url_prefix='/admin')
 
+
+#restrict to admin users
 @admin_bp.before_request
 @login_required
 def check_admin():
