@@ -1,0 +1,296 @@
+{% extends "base.html" %}
+{% block title %}FAQs{% endblock %}
+
+{% block content %}
+<style>
+    .faq-container {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+    .faq-card {
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        margin-bottom: 15px;
+        overflow: hidden;
+    }
+    .faq-header {
+        background-color: #f8f9fa;
+        padding: 15px 20px;
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: all 0.3s ease;
+    }
+    .faq-header:hover {
+        background-color: #e9ecef;
+    }
+    .faq-header h5 {
+        margin: 0;
+        color: #157347;
+        font-weight: 600;
+    }
+    .faq-body {
+        padding: 20px;
+        background-color: white;
+        border-top: 1px solid #dee2e6;
+    }
+    .cause-section, .solution-section {
+        margin-bottom: 15px;
+    }
+    .cause-section h6, .solution-section h6 {
+        color: #343a40;
+        font-weight: 600;
+        margin-bottom: 10px;
+    }
+    .cause-section ul, .solution-section ul {
+        padding-left: 20px;
+        margin-bottom: 0;
+    }
+    .cause-section li, .solution-section li {
+        margin-bottom: 5px;
+    }
+    .accordion-icon {
+        transition: transform 0.3s ease;
+    }
+    .accordion-icon.rotated {
+        transform: rotate(180deg);
+    }
+    .faq-title {
+        color: #157347;
+        margin-bottom: 30px;
+        text-align: center;
+        font-weight: 600;
+    }
+</style>
+
+<div class="container py-5">
+    <h2 class="faq-title"><i class="bi bi-question-circle me-2"></i>Frequently Asked Questions</h2>
+    
+    <div class="faq-container">
+        <!-- FAQ 1 -->
+        <div class="faq-card">
+            <div class="faq-header" onclick="toggleAccordion(this)">
+                <h5>Unable to Receive Account Credentials After Email Submission</h5>
+                <i class="bi bi-chevron-down accordion-icon"></i>
+            </div>
+            <div class="faq-body">
+                <div class="cause-section">
+                    <h6>Cause:</h6>
+                    <ul>
+                        <li>The admin has not yet verified and approved the email address.</li>
+                        <li>Email went to the spam/junk folder.</li>
+                    </ul>
+                </div>
+                <div class="solution-section">
+                    <h6>Solution:</h6>
+                    <ul>
+                        <li>Wait for the admin to approve your registration.</li>
+                        <li>Check your email spam/junk folder.</li>
+                        <li>If not received within 48 hours, contact the system administrator for assistance.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- FAQ 2 -->
+        <div class="faq-card">
+            <div class="faq-header" onclick="toggleAccordion(this)">
+                <h5>Cannot Log In With Temporary Password</h5>
+                <i class="bi bi-chevron-down accordion-icon"></i>
+            </div>
+            <div class="faq-body">
+                <div class="cause-section">
+                    <h6>Cause:</h6>
+                    <ul>
+                        <li>Incorrect entry of email or password.</li>
+                        <li>Temporary password has expired or already used.</li>
+                    </ul>
+                </div>
+                <div class="solution-section">
+                    <h6>Solution:</h6>
+                    <ul>
+                        <li>Ensure you are entering the correct email address and temporary password as provided in your welcome email.</li>
+                        <li>Copy and paste the password directly to avoid typing errors.</li>
+                        <li>If expired, request the admin to resend credentials.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- FAQ 3 -->
+        <div class="faq-card">
+            <div class="faq-header" onclick="toggleAccordion(this)">
+                <h5>System Prompts for Password Change but New Password Is Rejected</h5>
+                <i class="bi bi-chevron-down accordion-icon"></i>
+            </div>
+            <div class="faq-body">
+                <div class="cause-section">
+                    <h6>Cause:</h6>
+                    <ul>
+                        <li>New password does not meet system security requirements (e.g., too short, missing special characters, etc.).</li>
+                    </ul>
+                </div>
+                <div class="solution-section">
+                    <h6>Solution:</h6>
+                    <ul>
+                        <li>Create a password that is at least 8 characters long, contains an uppercase letter, a lowercase letter, a number, and a special character (e.g., !@#$).</li>
+                        <li>Follow the password policy shown on the password change page.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- FAQ 4 -->
+        <div class="faq-card">
+            <div class="faq-header" onclick="toggleAccordion(this)">
+                <h5>No Alumni Matches Displayed After Profile Completion</h5>
+                <i class="bi bi-chevron-down accordion-icon"></i>
+            </div>
+            <div class="faq-body">
+                <div class="cause-section">
+                    <h6>Cause:</h6>
+                    <ul>
+                        <li>Skills were not entered during profile completion.</li>
+                        <li>No alumni profiles with matching skills currently available.</li>
+                    </ul>
+                </div>
+                <div class="solution-section">
+                    <h6>Solution:</h6>
+                    <ul>
+                        <li>Edit your profile to ensure your skills are properly listed.</li>
+                        <li>Be patient and check back later as more alumni may register over time.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- FAQ 5 -->
+        <div class="faq-card">
+            <div class="faq-header" onclick="toggleAccordion(this)">
+                <h5>Unable to See My Job/Event Posting on the Platform</h5>
+                <i class="bi bi-chevron-down accordion-icon"></i>
+            </div>
+            <div class="faq-body">
+                <div class="cause-section">
+                    <h6>Cause:</h6>
+                    <ul>
+                        <li>You are a student and your post is pending admin approval.</li>
+                        <li>The post may have been rejected by the admin if it did not meet posting guidelines.</li>
+                    </ul>
+                </div>
+                <div class="solution-section">
+                    <h6>Solution:</h6>
+                    <ul>
+                        <li>Wait for admin approval (you will receive a notification once approved).</li>
+                        <li>If your post was rejected, review the reason provided and resubmit with corrections.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- FAQ 6 -->
+        <div class="faq-card">
+            <div class="faq-header" onclick="toggleAccordion(this)">
+                <h5>Not Receiving Replies From Alumni After Initiating a Conversation</h5>
+                <i class="bi bi-chevron-down accordion-icon"></i>
+            </div>
+            <div class="faq-body">
+                <div class="cause-section">
+                    <h6>Cause:</h6>
+                    <ul>
+                        <li>Alumni may not have seen the message yet.</li>
+                        <li>Alumni may not be actively using the platform.</li>
+                    </ul>
+                </div>
+                <div class="solution-section">
+                    <h6>Solution:</h6>
+                    <ul>
+                        <li>Be patient and allow time for alumni to respond.</li>
+                        <li>Consider reaching out to other available alumni matches for better engagement.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- FAQ 7 -->
+        <div class="faq-card">
+            <div class="faq-header" onclick="toggleAccordion(this)">
+                <h5>Forgot Password and Cannot Log In</h5>
+                <i class="bi bi-chevron-down accordion-icon"></i>
+            </div>
+            <div class="faq-body">
+                <div class="cause-section">
+                    <h6>Cause:</h6>
+                    <ul>
+                        <li>User has forgotten their login password.</li>
+                    </ul>
+                </div>
+                <div class="solution-section">
+                    <h6>Solution:</h6>
+                    <ul>
+                        <li>Use the "Forgot Password" link on the login page to reset your password.</li>
+                        <li>Follow the password reset instructions sent to your registered email.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- FAQ 8 -->
+        <div class="faq-card">
+            <div class="faq-header" onclick="toggleAccordion(this)">
+                <h5>Unable to View Departmental Announcements</h5>
+                <i class="bi bi-chevron-down accordion-icon"></i>
+            </div>
+            <div class="faq-body">
+                <div class="cause-section">
+                    <h6>Cause:</h6>
+                    <ul>
+                        <li>Network issues or session timeout.</li>
+                        <li>System maintenance in progress.</li>
+                    </ul>
+                </div>
+                <div class="solution-section">
+                    <h6>Solution:</h6>
+                    <ul>
+                        <li>Refresh the page or log out and log back in.</li>
+                        <li>If the issue persists, try accessing the system later or contact system support.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function toggleAccordion(header) {
+    const card = header.parentElement;
+    const body = header.nextElementSibling;
+    const icon = header.querySelector('.accordion-icon');
+    
+    // Toggle the body visibility
+    if (body.style.display === 'block') {
+        body.style.display = 'none';
+        icon.classList.remove('rotated');
+    } else {
+        body.style.display = 'block';
+        icon.classList.add('rotated');
+    }
+    
+    // Close all other FAQs
+    document.querySelectorAll('.faq-card').forEach(item => {
+        if (item !== card) {
+            item.querySelector('.faq-body').style.display = 'none';
+            item.querySelector('.accordion-icon').classList.remove('rotated');
+        }
+    });
+}
+
+// Initialize - close all FAQs by default
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.faq-body').forEach(body => {
+        body.style.display = 'none';
+    });
+});
+</script>
+{% endblock %}

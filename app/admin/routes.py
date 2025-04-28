@@ -179,8 +179,25 @@ def approve_job(job_id):
 @admin_bp.route('/delete-job/<int:job_id>', methods=['POST'])
 def delete_job(job_id):
     job = Job.query.get_or_404(job_id)
+    
+    # Access related info before deleting
+    creator_email = job.creator.email
+    job_title = job.title
+    job_creator = job.creator
+
+    # Now safe to delete
     db.session.delete(job)
     db.session.commit()
+
+    # Now send the email using saved info
+    send_email(
+        to=creator_email,
+        subject=f"Job Rejected: {job_title}",
+        template="job_rejected.html",
+        user=job_creator,
+        job=job_title 
+    )
+    
     flash('Job post deleted successfully', 'success')
     return redirect(url_for('admin.dashboard'))
 

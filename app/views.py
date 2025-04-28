@@ -5,6 +5,8 @@ from datetime import datetime
 from app.utils import utc_to_eat
 from app import db
 from app.forms import ContactForm, ContactFormLoggedIn
+from app.emails import send_email
+from flask import current_app
 
 views_bp = Blueprint('views', __name__)
 
@@ -41,6 +43,10 @@ def about():
 @views_bp.route('/learning' , methods=['GET', 'POST'])
 def learning():
     return render_template('learning.html')
+
+@views_bp.route('/faqs', methods=['GET', 'POST'])
+def faqs():
+    return render_template('faqs.html')
 
 @views_bp.route('/contact', methods=['GET', 'POST'])
 def contact():
@@ -96,6 +102,19 @@ def reply_to_message(message_id):
         message.is_responded = True
         message.is_read = True
         db.session.commit()
+
+        try:
+            send_email(
+                to=message.email,
+                subject=f"Re: Your Contact Message",
+                template="contact_response.html",
+                original_message=message.message,
+                response=response,
+                contact_email=current_app.config['MAIL_DEFAULT_SENDER']  # Your support email
+            )
+        except Exception as e:
+            current_app.logger.error(f"Failed to send email response: {str(e)}")
+            flash('Response saved but failed to send email', 'warning')
         
         # Here you would add code to actually send the email response
         # using Flask-Mail or another email service

@@ -2,6 +2,16 @@
 {% block content %}
 <div class="container">
     <h2 class="mb-4">Verification Requests</h2>
+
+    <nav aria-label="breadcrumb" class="bg-white py-2">
+        <div class="container">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ url_for('admin.dashboard') }}">Dashboard</a></li>
+                <li class="breadcrumb-item active">Verification Requests</li>
+            </ol>
+        </div>
+    </nav>
+    
     
     <div class="card shadow">
         <div class="card-body">

@@ -1,11 +1,30 @@
-{% extends "base.html" %} {% block title %}Admin Dashboard{% endblock %} {%
-block content %}
+{% extends "base.html" %} 
+{% block title %}Admin Dashboard{% endblock %} 
+{% block content %}
 <style>
   :root {
     --primary-green: #157347;
     --dark-green: #0d4d32;
     --accent-gold: #e6c200;
     --dark-blue: #161f37;
+    --light-gray: #f8f9fa;
+    --medium-gray: #e9ecef;
+  }
+
+  .admin-container {
+    padding: 2rem 0;
+    background-color: var(--light-gray);
+    min-height: 100vh;
+  }
+
+  .dashboard-title {
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    color: var(--primary-green);
+    padding-bottom: 0.5rem;
+    border-bottom: 3px solid var(--accent-gold);
+    display: inline-block;
+    margin-bottom: 2rem;
   }
 
   .admin-card {
@@ -13,37 +32,47 @@ block content %}
     border-radius: 12px;
     overflow: hidden;
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-      box-shadow 0.3s ease;
+                box-shadow 0.3s ease;
     background: white;
     margin-bottom: 1.5rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   }
 
   .admin-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 12px 24px rgba(21, 115, 71, 0.1);
+    box-shadow: 0 12px 24px rgba(21, 115, 71, 0.15);
   }
 
   .card-header-custom {
-    background: linear-gradient(
-      135deg,
-      var(--primary-green),
-      var(--dark-green)
-    ) !important;
+    background: linear-gradient(135deg, var(--primary-green), var(--dark-green)) !important;
     color: white !important;
     padding: 1.25rem 2rem;
     border-radius: 12px 12px 0 0 !important;
+    border-bottom: none;
   }
 
   .stats-card {
-    background: linear-gradient(135deg, #f8fff9, #ffffff);
+    background: white;
     border-left: 4px solid var(--primary-green);
+    transition: all 0.3s ease;
+  }
+
+  .stats-card:hover {
+    background: rgba(21, 115, 71, 0.03);
   }
 
   .stats-number {
     font-size: 2.5rem;
     font-weight: 700;
     color: var(--primary-green);
-    text-shadow: 0 2px 4px rgba(21, 115, 71, 0.1);
+    margin-bottom: 0.5rem;
+  }
+
+  .stats-label {
+    color: #6c757d;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
   }
 
   .btn-admin-primary {
@@ -53,6 +82,8 @@ block content %}
     padding: 0.75rem 1.5rem;
     border-radius: 8px;
     transition: all 0.3s ease;
+    font-weight: 500;
+    box-shadow: 0 2px 6px rgba(21, 115, 71, 0.2);
   }
 
   .btn-admin-primary:hover {
@@ -60,22 +91,32 @@ block content %}
     border-color: var(--dark-green);
     color: white !important;
     transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(21, 115, 71, 0.3);
   }
 
   .btn-admin-secondary {
-    background: var(--accent-gold);
-    border-color: var(--accent-gold);
+    background: white;
+    border: 2px solid var(--accent-gold);
     color: var(--dark-blue);
     padding: 0.75rem 1.5rem;
     border-radius: 8px;
     transition: all 0.3s ease;
+    font-weight: 500;
   }
 
   .btn-admin-secondary:hover {
-    background: var(--dark-blue);
-    border-color: var(--dark-blue);
-    color: white !important;
+    background: var(--accent-gold);
+    border-color: var(--accent-gold);
+    color: var(--dark-blue) !important;
     transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(230, 194, 0, 0.2);
+  }
+
+  .action-buttons {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 2rem;
   }
 
   .table-custom {
@@ -83,6 +124,7 @@ block content %}
     border-radius: 8px;
     overflow: hidden;
     border: 1px solid rgba(21, 115, 71, 0.1);
+    margin-bottom: 0;
   }
 
   .table-custom th {
@@ -90,10 +132,13 @@ block content %}
     color: var(--primary-green);
     font-weight: 600;
     padding: 1rem;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
   }
 
   .table-custom td {
-    padding: 0.875rem;
+    padding: 1rem;
     vertical-align: middle;
     border-top: 1px solid rgba(21, 115, 71, 0.05);
   }
@@ -104,6 +149,7 @@ block content %}
     padding: 0.375rem 0.75rem;
     border-radius: 6px;
     font-weight: 500;
+    font-size: 0.8rem;
   }
 
   .alert-custom {
@@ -111,54 +157,21 @@ block content %}
     border: 1px solid rgba(21, 115, 71, 0.15);
     color: var(--primary-green);
     border-radius: 8px;
-    margin: 1.5rem;
+    padding: 1.5rem;
+    text-align: center;
+    margin: 0;
   }
 
-  .dashboard-title {
-    font-weight: 700;
-    letter-spacing: -0.5px;
-    color: var(--primary-green);
-    padding-bottom: 0.5rem;
-    border-bottom: 3px solid var(--accent-gold);
-    display: inline-block;
-  }
-
-  .admin-navbar {
-    background: linear-gradient(135deg, #161f37, #0e1527) !important;
-    box-shadow: 0 2px 10px rgba(22, 31, 55, 0.1);
-    padding: 0.5rem 0;
-  }
-
-  .admin-navbar .navbar-brand {
-    color: #e6c200 !important;
-    font-weight: 500;
-  }
-
-  .admin-navbar .nav-link {
-    color: rgba(255, 255, 255, 0.8) !important;
-  }
-
-  .admin-navbar .nav-link:hover {
-    color: #e6c200 !important;
-  }
-
-  .admin-navbar .dropdown-menu {
-    background-color: #161f37;
-    border: 1px solid rgba(230, 194, 0, 0.1);
-  }
-
-  .admin-navbar .dropdown-item {
-    color: rgba(255, 255, 255, 0.8);
-  }
-
-  .admin-navbar .dropdown-item:hover {
-    background-color: rgba(230, 194, 0, 0.1);
-    color: #e6c200;
+  .alert-custom i {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    display: block;
   }
 
   .report-form .form-label {
     color: var(--primary-green);
     font-weight: 500;
+    margin-bottom: 0.5rem;
   }
 
   .report-form .form-select,
@@ -166,6 +179,7 @@ block content %}
     border: 2px solid rgba(21, 115, 71, 0.2);
     border-radius: 8px;
     transition: all 0.3s ease;
+    padding: 0.75rem;
   }
 
   .report-form .form-select:focus,
@@ -173,285 +187,269 @@ block content %}
     border-color: var(--primary-green);
     box-shadow: 0 0 0 0.25rem rgba(21, 115, 71, 0.1);
   }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .action-btn {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+  }
+
+  .btn-sm {
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
+  }
+
+  .icon-large {
+    font-size: 1.25rem;
+    margin-right: 0.5rem;
+  }
+
+  .section-spacing {
+    margin-bottom: 3rem;
+  }
 </style>
 
-<div class="container py-4">
-  <h2 class="dashboard-title mb-5">
-    <i class="bi bi-speedometer2 me-2"></i>Admin Dashboard
-  </h2>
+<div class="admin-container">
+  <div class="container">
+    <h2 class="dashboard-title">
+      <i class="bi bi-speedometer2 icon-large"></i>Admin Dashboard
+    </h2>
 
-  <!-- systems report -->
-  <div class="admin-card mb-5">
-    <div class="card-header card-header-custom">
-      <h4 class="mb-0 fw-semibold">
-        <i class="bi bi-file-earmark-bar-graph me-2"></i>Generate System Report
-      </h4>
-    </div>
-    <div class="card-body">
-      <form action="{{ url_for('admin.generate_report') }}" method="post">
-        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+    <!-- Systems Report Section -->
+    <div class="section-spacing">
+      <div class="admin-card">
+        <div class="card-header card-header-custom">
+          <h4 class="mb-0 fw-semibold">
+            <i class="bi bi-file-earmark-bar-graph icon-large"></i>Generate System Report
+          </h4>
+        </div>
+        <div class="card-body">
+          <form action="{{ url_for('admin.generate_report') }}" method="post" class="report-form">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
 
-        <div class="row g-3 mb-4">
-          <div class="col-md-4">
-            <label class="form-label">Report Type</label>
-            <select name="report_type" class="form-select">
-              <option value="full">Full System Report</option>
-              <option value="users">User Analytics</option>
-              <option value="events">Event Analytics</option>
-              <option value="jobs">Job Analytics</option>
-            </select>
-          </div>
-          <div class="col-md-4">
-            <label class="form-label">Start Date</label>
-            <input type="date" name="start_date" class="form-control" />
-          </div>
-          <div class="col-md-4">
-            <label class="form-label">End Date</label>
-            <input type="date" name="end_date" class="form-control" />
-          </div>
-        </div>
+            <div class="row g-3 mb-4">
+              <div class="col-md-4">
+                <label class="form-label">Report Type</label>
+                <select name="report_type" class="form-select">
+                  <option value="full">Full System Report</option>
+                  <option value="users">User Analytics</option>
+                  <option value="events">Event Analytics</option>
+                  <option value="jobs">Job Analytics</option>
+                </select>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">Start Date</label>
+                <input type="date" name="start_date" class="form-control" />
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">End Date</label>
+                <input type="date" name="end_date" class="form-control" />
+              </div>
+            </div>
 
-        <button type="submit" class="btn btn-admin-primary">
-          <i class="bi bi-file-pdf me-2"></i>Generate PDF Report
-        </button>
-      </form>
-    </div>
-  </div>
-  <!-- Stats Cards -->
-  <div class="row g-4 mb-5">
-    <div class="col-md-3">
-      <div class="admin-card stats-card">
-        <div class="card-body text-center py-4">
-          <h5 class="card-title mb-3 text-muted">Total Users</h5>
-          <p class="stats-number">{{ stats.total_users }}</p>
+            <button type="submit" class="btn btn-admin-primary">
+              <i class="bi bi-file-pdf me-2"></i>Generate PDF Report
+            </button>
+          </form>
         </div>
       </div>
     </div>
-    <div class="col-md-3">
-      <div class="admin-card stats-card">
-        <div class="card-body text-center py-4">
-          <h5 class="card-title mb-3 text-muted">Active Alumni</h5>
-          <p class="stats-number">{{ stats.active_alumni }}</p>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-3">
-      <div class="admin-card stats-card">
-        <div class="card-body text-center py-4">
-          <h5 class="card-title mb-3 text-muted">Pending Verifications</h5>
-          <p class="stats-number">{{ stats.pending_verifications }}</p>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-3">
-      <div class="admin-card stats-card">
-        <div class="card-body text-center py-4">
-          <h5 class="card-title mb-3 text-muted">Pending Events</h5>
-          <p class="stats-number">{{ stats.pending_events_count }}</p>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-3">
+
+    <!-- Stats Cards -->
+    <div class="section-spacing">
+      <div class="stats-grid">
         <div class="admin-card stats-card">
           <div class="card-body text-center py-4">
-            <h5 class="card-title mb-3 text-muted">Verification Requests</h5>
+            <h5 class="stats-label">Total Users</h5>
+            <p class="stats-number">{{ stats.total_users }}</p>
+          </div>
+        </div>
+        
+        <div class="admin-card stats-card">
+          <div class="card-body text-center py-4">
+            <h5 class="stats-label">Active Alumni</h5>
+            <p class="stats-number">{{ stats.active_alumni }}</p>
+          </div>
+        </div>
+        
+        <div class="admin-card stats-card">
+          <div class="card-body text-center py-4">
+            <h5 class="stats-label">Pending Verifications</h5>
+            <p class="stats-number">{{ stats.pending_verifications }}</p>
+          </div>
+        </div>
+        
+        <div class="admin-card stats-card">
+          <div class="card-body text-center py-4">
+            <h5 class="stats-label">Pending Events</h5>
+            <p class="stats-number">{{ stats.pending_events_count }}</p>
+          </div>
+        </div>
+        
+        <div class="admin-card stats-card">
+          <div class="card-body text-center py-4">
+            <h5 class="stats-label">Verification Requests</h5>
             <p class="stats-number">
               {% if pending_requests_count > 0 %} {{ pending_requests_count }}
               {% else %} 0 {% endif %}
             </p>
-            <a
-              href="{{ url_for('admin.verification_requests') }}"
-              class="btn btn-sm btn-success mt-2"
-            >
+            <a href="{{ url_for('admin.verification_requests') }}" class="btn btn-sm btn-admin-primary mt-2">
               View Requests
             </a>
           </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <!-- Action Buttons -->
-  <div class="d-flex flex-wrap gap-3 mb-5 px-2">
-    <a href="{{ url_for('admin.manage_users') }}" class="btn btn-admin-primary">
-      <i class="bi bi-people-fill me-2"></i> Manage Users
-    </a>
-    <a href="{{ url_for('admin.add_user') }}" class="btn btn-admin-primary">
-      <i class="bi bi-person-plus me-2"></i> Add User
-    </a>
-    <!-- <a href="#pending-events" class="btn btn-admin-secondary">
-            <i class="bi bi-calendar-check me-2"></i> Review Events
+    <!-- Action Buttons -->
+    <div class="section-spacing">
+      <div class="action-buttons">
+        <a href="{{ url_for('admin.manage_users') }}" class="btn btn-admin-primary action-btn">
+          <i class="bi bi-people-fill"></i> Manage Users
         </a>
-        <a href="#pending-jobs" class="btn btn-admin-secondary">
-            <i class="bi bi-briefcase me-2"></i> Review Jobs
-        </a> -->
-    <a
-      href="{{ url_for('views.contact_messages') }}"
-      class="btn btn-admin-secondary"
-    >
-      <i class="bi bi-envelope me-2"></i> Contact Messages
-    </a>
-    <a
-      href="{{ url_for('admin.list_announcements') }}"
-      class="btn btn-admin-secondary"
-    >
-      <i class="bi bi-envelope me-2"></i> Announcements
-    </a>
-  </div>
-
-  <!-- Pending Events Section -->
-  <div class="admin-card" id="pending-events">
-    <div class="card-header card-header-custom">
-      <h4 class="mb-0 fw-semibold">
-        <i class="bi bi-hourglass-split me-2"></i>Pending Event Approvals
-      </h4>
+        <a href="{{ url_for('admin.add_user') }}" class="btn btn-admin-primary action-btn">
+          <i class="bi bi-person-plus"></i> Add User
+        </a>
+        <a href="{{ url_for('views.contact_messages') }}" class="btn btn-admin-secondary action-btn">
+          <i class="bi bi-envelope"></i> Contact Messages
+        </a>
+        <a href="{{ url_for('admin.list_announcements') }}" class="btn btn-admin-secondary action-btn">
+          <i class="bi bi-megaphone"></i> Announcements
+        </a>
+      </div>
     </div>
-    <div class="card-body p-0">
-      {% if pending_events %}
-      <div class="table-responsive">
-        <table class="table table-custom mb-0">
-          <thead>
-            <tr>
-              <th>Event Title</th>
-              <th>Created By</th>
-              <th>Event Date</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for event in pending_events %}
-            <tr>
-              <td>{{ event.title }}</td>
-              <td>{{ event.creator.full_name }}</td>
-              <td>{{ event.date_str }}</td>
-              <td>
-                <div class="d-flex gap-2">
-                  <form
-                    action="{{ url_for('admin.verify_event', event_id=event.id) }}"
-                    method="POST"
-                  >
-                    <input
-                      type="hidden"
-                      name="csrf_token"
-                      value="{{ csrf_token() }}"
-                    />
-                    <button type="submit" class="btn btn-sm btn-admin-primary">
-                      <i class="bi bi-check-circle"></i> Approve
-                    </button>
-                  </form>
-                  <a
-                    href="{{ url_for('events.event_detail', event_id=event.id) }}"
-                    class="btn btn-sm btn-admin-secondary"
-                  >
-                    <i class="bi bi-eye"></i> View
-                  </a>
-                  <form
-                    action="{{ url_for('admin.delete_event', event_id=event.id) }}"
-                    method="POST"
-                  >
-                    <input
-                      type="hidden"
-                      name="csrf_token"
-                      value="{{ csrf_token() }}"
-                    />
-                    <button type="submit" class="btn btn-sm btn-danger">
-                      <i class="bi bi-trash"></i> Delete
-                    </button>
-                  </form>
-                </div>
-              </td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
-      {% else %}
-      <div class="alert alert-custom mb-0">
-        <i class="bi bi-check2-all me-2"></i>No pending events needing approval!
-      </div>
-      {% endif %}
-    </div>
-  </div>
 
-  <!-- Pending Jobs Section -->
-  <div class="admin-card" id="pending-jobs">
-    <div class="card-header card-header-custom">
-      <h4 class="mb-0 fw-semibold">
-        <i class="bi bi-hourglass-split me-2"></i>Pending Job Approvals
-      </h4>
+    <!-- Pending Events Section -->
+    <div class="section-spacing">
+      <div class="admin-card" id="pending-events">
+        <div class="card-header card-header-custom">
+          <h4 class="mb-0 fw-semibold">
+            <i class="bi bi-hourglass-split icon-large"></i>Pending Event Approvals
+          </h4>
+        </div>
+        <div class="card-body p-0">
+          {% if pending_events %}
+          <div class="table-responsive">
+            <table class="table table-custom mb-0">
+              <thead>
+                <tr>
+                  <th>Event Title</th>
+                  <th>Created By</th>
+                  <th>Event Date</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for event in pending_events %}
+                <tr>
+                  <td>{{ event.title }}</td>
+                  <td>{{ event.creator.full_name }}</td>
+                  <td>{{ event.date_str }}</td>
+                  <td>
+                    <div class="d-flex gap-2">
+                      <form action="{{ url_for('admin.verify_event', event_id=event.id) }}" method="POST">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+                        <button type="submit" class="btn btn-sm btn-admin-primary">
+                          <i class="bi bi-check-circle"></i> Approve
+                        </button>
+                      </form>
+                      <a href="{{ url_for('events.event_detail', event_id=event.id) }}" class="btn btn-sm btn-admin-secondary">
+                        <i class="bi bi-eye"></i> View
+                      </a>
+                      <form action="{{ url_for('admin.delete_event', event_id=event.id) }}" method="POST">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+                        <button type="submit" class="btn btn-sm btn-danger">
+                          <i class="bi bi-trash"></i> Reject
+                        </button>
+                      </form>
+                    </div>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+          {% else %}
+          <div class="alert alert-custom">
+            <i class="bi bi-check2-all"></i>
+            No pending events needing approval!
+          </div>
+          {% endif %}
+        </div>
+      </div>
     </div>
-    <div class="card-body p-0">
-      {% if pending_jobs %}
-      <div class="table-responsive">
-        <table class="table table-custom mb-0">
-          <thead>
-            <tr>
-              <th>Job Title</th>
-              <th>Company</th>
-              <th>Type</th>
-              <th>Posted By</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for job in pending_jobs %}
-            <tr>
-              <td>{{ job.title }}</td>
-              <td>{{ job.company }}</td>
-              <td>
-                <span class="badge action-badge">
-                  {{ job.job_type|capitalize }}
-                </span>
-              </td>
-              <td>{{ job.creator.full_name }}</td>
-              <td>
-                <div class="d-flex gap-2">
-                  <form
-                    action="{{ url_for('admin.approve_job', job_id=job.id) }}"
-                    method="POST"
-                  >
-                    <input
-                      type="hidden"
-                      name="csrf_token"
-                      value="{{ csrf_token() }}"
-                    />
-                    <button type="submit" class="btn btn-sm btn-admin-primary">
-                      <i class="bi bi-check-circle"></i> Approve
-                    </button>
-                  </form>
 
-                  <a
-                    href="{{ url_for('jobs.job_detail', job_id=job.id) }}"
-                    class="btn btn-sm btn-admin-secondary"
-                  >
-                    <i class="bi bi-eye"></i> View
-                  </a>
-                  <form
-                    action="{{ url_for('admin.delete_job', job_id=job.id) }}"
-                    method="POST"
-                  >
-                    <input
-                      type="hidden"
-                      name="csrf_token"
-                      value="{{ csrf_token() }}"
-                    />
-                    <button type="submit" class="btn btn-sm btn-danger">
-                      <i class="bi bi-trash"></i> Delete
-                    </button>
-                  </form>
-                </div>
-              </td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
+    <!-- Pending Jobs Section -->
+    <div class="section-spacing">
+      <div class="admin-card" id="pending-jobs">
+        <div class="card-header card-header-custom">
+          <h4 class="mb-0 fw-semibold">
+            <i class="bi bi-hourglass-split icon-large"></i>Pending Job Approvals
+          </h4>
+        </div>
+        <div class="card-body p-0">
+          {% if pending_jobs %}
+          <div class="table-responsive">
+            <table class="table table-custom mb-0">
+              <thead>
+                <tr>
+                  <th>Job Title</th>
+                  <th>Company</th>
+                  <th>Type</th>
+                  <th>Posted By</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for job in pending_jobs %}
+                <tr>
+                  <td>{{ job.title }}</td>
+                  <td>{{ job.company }}</td>
+                  <td>
+                    <span class="badge action-badge">
+                      {{ job.job_type|capitalize }}
+                    </span>
+                  </td>
+                  <td>{{ job.creator.full_name }}</td>
+                  <td>
+                    <div class="d-flex gap-2">
+                      <form action="{{ url_for('admin.approve_job', job_id=job.id) }}" method="POST">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+                        <button type="submit" class="btn btn-sm btn-admin-primary">
+                          <i class="bi bi-check-circle"></i> Approve
+                        </button>
+                      </form>
+                      <a href="{{ url_for('jobs.job_detail', job_id=job.id) }}" class="btn btn-sm btn-admin-secondary">
+                        <i class="bi bi-eye"></i> View
+                      </a>
+                      <form action="{{ url_for('admin.delete_job', job_id=job.id) }}" method="POST">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+                        <button type="submit" class="btn btn-sm btn-danger">
+                          <i class="bi bi-trash"></i> Reject
+                        </button>
+                      </form>
+                    </div>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+          {% else %}
+          <div class="alert alert-custom">
+            <i class="bi bi-check2-all"></i>
+            No pending jobs needing approval!
+          </div>
+          {% endif %}
+        </div>
       </div>
-      {% else %}
-      <div class="alert alert-custom mb-0">
-        <i class="bi bi-check2-all me-2"></i>No pending jobs needing approval!
-      </div>
-      {% endif %}
     </div>
   </div>
 </div>
