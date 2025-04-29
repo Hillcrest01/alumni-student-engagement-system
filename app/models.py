@@ -63,7 +63,6 @@ class User(UserMixin, db.Model):
 
 
 class Interest(db.Model):
-    """Tag-like system for skills/specializations"""
     __tablename__ = 'interest'
     
     id = db.Column(db.Integer, primary_key=True)
