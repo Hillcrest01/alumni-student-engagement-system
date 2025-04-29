@@ -1,4 +1,4 @@
-# emails.py
+#this codegives the email functionlality.
 from flask import render_template, current_app
 from flask_mail import Message
 from .extensions import mail
