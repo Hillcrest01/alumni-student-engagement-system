@@ -63,7 +63,7 @@ def login():
         
         # Check password validity
         if not user.check_password(form.password.data):
-            flash('Incorrect password.', 'warning')
+            flash('Incorrect password. Please Try again', 'warning')
             return redirect(url_for('auth.login'))
         
         # Check if account is verified
