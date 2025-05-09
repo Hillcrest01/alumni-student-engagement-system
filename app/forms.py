@@ -12,6 +12,7 @@ class LoginForm(FlaskForm):
     submit = SubmitField('Sign In')
 
 
+#change password form
 class ChangePasswordForm(FlaskForm):
     current_password = PasswordField('Current Password', validators=[DataRequired()])
     new_password = PasswordField('New Password', validators=[
